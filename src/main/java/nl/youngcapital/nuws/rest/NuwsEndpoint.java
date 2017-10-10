@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import nl.youngcapital.nuws.NieuwsItem;
@@ -36,6 +38,13 @@ public class NuwsEndpoint {
 			ar.add(i);
 		}
 		return ar;
+	}
+	
+	@PostMapping("/nuwspost")
+	public void postEntiteit(@RequestBody NieuwsItem nieuwsitem) {
+		System.out.println("Jojo");
+		System.out.println(nieuwsitem.getUrl());
+		nuwsservice.test(nieuwsitem);
 	}
 	
 	
