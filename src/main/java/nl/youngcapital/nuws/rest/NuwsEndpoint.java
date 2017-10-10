@@ -20,14 +20,14 @@ public class NuwsEndpoint {
 
 	@GetMapping("/nuws")
 	public String getNuws() {
-		nuwsservice.test(new NieuwsItem());
+		//nuwsservice.test(new NieuwsItem());
 		return "hallo";
 	}
 	
 	@GetMapping("/nuws2")
 	public NieuwsItem getNuws2() {
 		NieuwsItem n = new NieuwsItem("testNieuwsitemUrl");
-		nuwsservice.test(n);
+		//nuwsservice.test(n);
 		return n;
 	}
 	
@@ -44,7 +44,7 @@ public class NuwsEndpoint {
 	public void postEntiteit(@RequestBody NieuwsItem nieuwsitem) {
 		System.out.println("Jojo");
 		System.out.println(nieuwsitem.getUrl());
-		nuwsservice.test(nieuwsitem);
+		nuwsservice.addToDatabase(nieuwsitem);
 	}
 	
 	

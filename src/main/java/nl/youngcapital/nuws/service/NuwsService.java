@@ -14,9 +14,9 @@ public class NuwsService {
 	@Autowired
 	NuwsRepository nuwsrepository;
 
-	public NieuwsItem test(NieuwsItem nieuwsitem) {
+	public void addToDatabase(NieuwsItem nieuwsitem) {
 		nuwsrepository.save(nieuwsitem);
-		return nieuwsitem;
+		//return nieuwsitem;
 	}
 	
 	
