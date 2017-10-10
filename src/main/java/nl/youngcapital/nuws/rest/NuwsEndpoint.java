@@ -20,6 +20,13 @@ public class NuwsEndpoint {
 		return "hallo";
 	}
 	
+	@GetMapping("/nuws2")
+	public NieuwsItem getNuws2() {
+		NieuwsItem n = new NieuwsItem("testNieuwsitemUrl");
+		nuwsservice.test(n);
+		return n;
+	}
+	
 	
 	
 	

@@ -24,6 +24,10 @@ public class NieuwsItem {
         this.tags = tags;
         this.admin = admin;
     }
+    
+    public NieuwsItem(String url) {
+        this.url = url;
+    }
 
     public Long getId() {
         return id;
