@@ -1,5 +1,7 @@
 package nl.youngcapital.nuws.rest;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,6 +27,15 @@ public class NuwsEndpoint {
 		NieuwsItem n = new NieuwsItem("testNieuwsitemUrl");
 		nuwsservice.test(n);
 		return n;
+	}
+	
+	@GetMapping("/nuws3")
+	public ArrayList<Integer> getNuws3() {
+		ArrayList<Integer> ar = new ArrayList<Integer>();
+		for (int i = 0; i<5; i++) {
+			ar.add(i);
+		}
+		return ar;
 	}
 	
 	
