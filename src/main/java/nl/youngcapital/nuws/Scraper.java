@@ -22,24 +22,19 @@ public class Scraper {
 		this.body = scrapeBody(new URL(source));
 		
 	}
-
+	/*  Voorbeeld van het scrapen van een nieuwsbericht
+	 * 
     public static void main(String[] args) throws IOException {
     		
-    	
-    	/*  Voorbeeld van het scrapen van een nieuwsbericht
-    	
-    		Scraper sc = new Scraper("https://www.nu.nl/binnenland/4957793/verdachte-van-terreurdreiging-bij-psv-stadion-niet-vervolgd.html");
+   		Scraper sc = new Scraper("https://www.nu.nl/binnenland/4957793/verdachte-van-terreurdreiging-bij-psv-stadion-niet-vervolgd.html");
         System.out.println(sc.title);
         System.out.println(sc.subTitle);
         for (String s : sc.body) {
         	System.out.println(s);
         	}
+        	}
+        	
     */
-    	
-        
-
-
-    }
     
     public String scrapeTitle(URL url) throws IOException{
         URLConnection con = url.openConnection();
