@@ -13,7 +13,7 @@ public class Scraper {
 	String source;
 	String title;
 	String subTitle;
-	ArrayList<String> body;
+	String body;
 	
 	public Scraper(String source) throws IOException{
 		this.source = source;
@@ -22,19 +22,17 @@ public class Scraper {
 		this.body = scrapeBody(new URL(source));
 		
 	}
-	/*  Voorbeeld van het scrapen van een nieuwsbericht
-	 * 
+
+	/*
     public static void main(String[] args) throws IOException {
     		
    		Scraper sc = new Scraper("https://www.nu.nl/binnenland/4957793/verdachte-van-terreurdreiging-bij-psv-stadion-niet-vervolgd.html");
         System.out.println(sc.title);
         System.out.println(sc.subTitle);
-        for (String s : sc.body) {
-        	System.out.println(s);
+        System.out.println(sc.body);
         	}
-        	}
-        	
-    */
+        	*/
+    
     
     public String scrapeTitle(URL url) throws IOException{
         URLConnection con = url.openConnection();
@@ -95,7 +93,7 @@ public class Scraper {
         return subTitleAr.get(1).trim();
     }
     
-    public ArrayList<String> scrapeBody(URL url) throws IOException{
+    public String scrapeBody(URL url) throws IOException{
         URLConnection con = url.openConnection();
         InputStream is =con.getInputStream();
         BufferedReader br = new BufferedReader(new InputStreamReader(is));
@@ -105,7 +103,7 @@ public class Scraper {
         String stopString = "=\"block divider\"";
         ArrayList<String> bodyAr = new ArrayList<String>();
         StringBuilder bodySB = new StringBuilder();
-        ArrayList<String> bodyTxt = new ArrayList<String>();
+        StringBuilder bodyTxt = new StringBuilder();
         
         BodyLoop:
         while ((line = br.readLine()) != null) {
@@ -128,17 +126,17 @@ public class Scraper {
         while (bodySB.indexOf("<p>") >= 0 || bodySB.indexOf("<a id=\"anchor") >= 0) {
         	
         	if ((bodySB.indexOf("<p>") < bodySB.indexOf("<a id=\"anchor")) || ((bodySB.indexOf("<a id=\"anchor") == -1) && (bodySB.indexOf("<p>") !=-1 ))) {
-        bodyTxt.add(bodySB.substring(bodySB.indexOf("<p>"), (bodySB.indexOf("</p>") + 4)));
+        bodyTxt.append(bodySB.substring(bodySB.indexOf("<p>"), (bodySB.indexOf("</p>") + 4)));
         bodySB.delete(0 , (bodySB.indexOf("</p>") + 4));
         	} else if (bodySB.indexOf("<a id=\"anchor") < bodySB.indexOf("<p>") && bodySB.indexOf("<a id=\"anchor") != -1) {
-        bodyTxt.add(bodySB.substring(bodySB.indexOf("<a id=\"anchor"), (bodySB.indexOf("</h3>") + 5)));
+        bodyTxt.append(bodySB.substring(bodySB.indexOf("<a id=\"anchor"), (bodySB.indexOf("</h3>") + 5)));
         bodySB.delete(0 , (bodySB.indexOf("</h3>") + 5));
         } else {
         	break;
         }
         }
         
-        return bodyTxt;
+        return bodyTxt.toString();
     }
 }
 
