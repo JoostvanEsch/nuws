@@ -51,7 +51,7 @@ public class NuwsEndpoint {
 	@PostMapping("/nuwspost")
 	public void postEntiteit(@RequestBody NieuwsItem nieuwsitem) {
 		System.out.println("Jojo");
-		System.out.println(nieuwsitem.getUrl());
+		//System.out.println(nieuwsitem.getUrl());
 		nuwsservice.addToDatabase(nieuwsitem);
 	}
 	

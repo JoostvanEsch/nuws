@@ -4,8 +4,11 @@
 		<script>
 
 			function verstuur(){
-      			var ent= document.getElementById("nieuwsiteminput").value;
-				var nieuwsitem = '{"url":"'+ent+'"}'; 
+      			var newUrl= document.getElementById("nieuwsurlinput").value;
+      			var newTags= document.getElementById("nieuwstagsinput").value;
+				var nieuwsitem = '{"tags":["'+newTags+'"] ,"url":"'+newUrl+'"}'; 
+				console.log(nieuwsitem);
+				//'{"url":"'+ent+'"}'
       			var xhttp = new XMLHttpRequest();
 				xhttp.onreadystatechange = function() {
 					if (this.readyState == 4 && this.status == 202) {
@@ -18,16 +21,14 @@
 			}
 			
 			function test(){
-				var nieuwsinput = document.getElementById("nieuwsiteminput").value;
-				document.getElementById("buttoninput").innerHTML = nieuwsinput;
-				alert(nieuwsinput);
+				
 				
           		var xhttp = new XMLHttpRequest();
   				xhttp.onreadystatechange = function() {
     					if (this.readyState == 4 && this.status == 200) {
     						var data = JSON.parse(this.responseText);
     						for (i = 0; i < data.length; i++)
-    						document.getElementById("outputserver").innerHTML += data[i].id;
+    						document.getElementById("outputserver").innerHTML += data[i].id + data[i].tags + data[i].url + "<br>";
     					}
   				};
           		xhttp.open("GET", "http://localhost:8082/nuws2");
@@ -39,9 +40,9 @@
 	</head>
 	<body>
 			
-		Via dit invoerscherm en deze knop Post ik een NieuwsItem, met de naam die ik invoer.
-		<input type="text" id="nieuwsiteminput" name="FirstName" value="Nieuws item titel">
-		<br>
+		Via dit invoerscherm en deze knop Post ik een NieuwsItem, met de naam die ik invoer.<br>
+		<input type="text" id="nieuwsurlinput" name="FirstName" value="Nieuws url input"><br>
+		<input type="text" id="nieuwstagsinput" name="FirstName" value="Nieuws tags input">format: "tag1", "tag2", "tag3"<br>
 		<button type="button" id="buttoninput" onclick="verstuur()">Posten van een NieuwsItem via Post</button>
 		<hr>
 		

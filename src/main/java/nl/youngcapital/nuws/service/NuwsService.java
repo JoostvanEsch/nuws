@@ -28,7 +28,6 @@ public class NuwsService {
 	
 	public List<NieuwsItem> getAllFromDatabase() {
 		return (List<NieuwsItem>) nuwsrepository.findAll();
-		//return n;
 	}
 	
 	
