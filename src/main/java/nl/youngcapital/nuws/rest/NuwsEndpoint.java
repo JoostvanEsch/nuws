@@ -1,11 +1,14 @@
 package nl.youngcapital.nuws.rest;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import nl.youngcapital.nuws.NieuwsItem;
@@ -24,11 +27,16 @@ public class NuwsEndpoint {
 		return "hallo";
 	}
 	
+	@ResponseBody
+	@GetMapping("/nuws2/{id}")
+	public NieuwsItem getNuws2(@PathVariable long id) {
+		return nuwsservice.getFromDatabase(1);
+	}
+	
+	@ResponseBody
 	@GetMapping("/nuws2")
-	public NieuwsItem getNuws2() {
-		NieuwsItem n = new NieuwsItem("testNieuwsitemUrl");
-		//nuwsservice.test(n);
-		return n;
+	public List<NieuwsItem> getNuws2() {
+		return nuwsservice.getAllFromDatabase();
 	}
 	
 	@GetMapping("/nuws3")
