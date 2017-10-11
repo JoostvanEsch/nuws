@@ -38,8 +38,16 @@ public class NuwsEndpoint {
 	
 	@ResponseBody
 	@GetMapping("/nuws2")
-	public List<NieuwsItem> getNuws2() {
-		return nuwsservice.getAllFromDatabase();
+	public List<NieuwsItem> getNuws2() throws IOException{
+		
+		List<NieuwsItem> NIList = nuwsservice.getAllFromDatabase();
+		for (NieuwsItem n : NIList) {
+			n.setTitle(new Scraper(n.getUrl()).scrapeTitle(new URL(n.getUrl())));
+			n.setSub(new Scraper(n.getUrl()).scrapeSubTitle(new URL(n.getUrl())));
+			n.setBodytext(new Scraper(n.getUrl()).scrapeBody(new URL(n.getUrl())));
+		}
+		
+		return NIList;
 	}
 	
 	@GetMapping("/nuws3")
@@ -55,10 +63,10 @@ public class NuwsEndpoint {
 	public void postEntiteit(@RequestBody NieuwsItem nieuwsitem) throws IOException{
 		//System.out.println("Jojo");
 		//System.out.println(nieuwsitem.getUrl());
-		System.out.println("Jojo");
-		nieuwsitem.setTitle(new Scraper(nieuwsitem.getUrl()).scrapeTitle(new URL(nieuwsitem.getUrl())));
-		nieuwsitem.setSub(new Scraper(nieuwsitem.getUrl()).scrapeSubTitle(new URL(nieuwsitem.getUrl())));
-		nieuwsitem.setBodytext(new Scraper(nieuwsitem.getUrl()).scrapeBody(new URL(nieuwsitem.getUrl())).substring(0, 256));
+		//System.out.println("Jojo");
+		//nieuwsitem.setTitle(new Scraper(nieuwsitem.getUrl()).scrapeTitle(new URL(nieuwsitem.getUrl())));
+		//nieuwsitem.setSub(new Scraper(nieuwsitem.getUrl()).scrapeSubTitle(new URL(nieuwsitem.getUrl())));
+		//nieuwsitem.setBodytext(new Scraper(nieuwsitem.getUrl()).scrapeBody(new URL(nieuwsitem.getUrl())).substring(0, 256));
 		
 		nuwsservice.addToDatabase(nieuwsitem);
 	}
