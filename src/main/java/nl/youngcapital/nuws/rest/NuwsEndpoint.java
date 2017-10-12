@@ -50,6 +50,19 @@ public class NuwsEndpoint {
 		return NIList;
 	}
 	
+	@ResponseBody
+	@GetMapping("/nuwstitles")
+	public List<NieuwsItem> getNuwsTitles() throws IOException{
+		
+		List<NieuwsItem> NITList = nuwsservice.getAllFromDatabase();
+		for (NieuwsItem n : NITList) {
+			n.setTitle(new Scraper(n.getUrl()).scrapeTitle(new URL(n.getUrl())));
+		}
+		
+		return NITList;
+	}
+	
+	
 	@GetMapping("/nuws3")
 	public ArrayList<Integer> getNuws3() {
 		ArrayList<Integer> ar = new ArrayList<Integer>();

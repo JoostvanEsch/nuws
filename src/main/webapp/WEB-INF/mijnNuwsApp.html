@@ -10,13 +10,13 @@
                         document.getElementById("outputserver").innerHTML = "";
                             var data = JSON.parse(this.responseText);
                             for (i = 0; i < data.length; i++) {
-                                var textaccumulation = data[i].id + " " + data[i].tags + " "+ data[i].url + "<br>" + data[i].title + "<br>" + data[i].sub + "<br>" + data[i].bodytext + "<br><br>";
+                                var textaccumulation = data[i].id + " " + data[i].url + "<br>" + data[i].title  + "<br><br>";
                                 document.getElementById("outputserver").innerHTML += textaccumulation;
                             }
                                 
                         }
                     };
-                xhttp.open("GET", "http://localhost:8082/nuws2");
+                xhttp.open("GET", "http://localhost:8082/nuwstitles");
                 xhttp.setRequestHeader("Content-type", "application/json");
                 xhttp.send();
             }		
