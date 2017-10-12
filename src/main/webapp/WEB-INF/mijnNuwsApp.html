@@ -10,22 +10,56 @@
                         document.getElementById("outputserver").innerHTML = "";
                             var data = JSON.parse(this.responseText);
                             for (i = 0; i < data.length; i++) {
-                                var textaccumulation = data[i].id + " " + data[i].tags + " "+ data[i].url + "<br>" + data[i].title + "<br>" + data[i].sub + "<br>" + data[i].bodytext + "<br><br>";
+                            	   var j = parseInt(i);
+                                var textaccumulation = data[j].id + "<br><a onclick='loadItem("+i+")'>" + data[j].title  + "</a><br><br>";
                                 document.getElementById("outputserver").innerHTML += textaccumulation;
                             }
                                 
                         }
                     };
-                xhttp.open("GET", "http://localhost:8082/nuws2");
+                xhttp.open("GET", "http://localhost:8082/nuwstitles");
                 xhttp.setRequestHeader("Content-type", "application/json");
                 xhttp.send();
-            }		
+            }	
+            function loadItem(n){
+                var xhttp = new XMLHttpRequest();
+                    xhttp.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                        document.getElementById("loadnews").innerHTML = "";
+                            var nieuwsitem = JSON.parse(this.responseText);
+                            
+                                var textaccumulation = nieuwsitem.title  + "<br><br>" + nieuwsitem.sub + "<br><br>" + nieuwsitem.bodytext;
+                                document.getElementById("loadnews").innerHTML += textaccumulation;
+                            
+                                
+                        }
+                    };
+                 var numb = parseInt(n+1);
+                xhttp.open("GET", "http://localhost:8082/nuws2/"+numb);
+                xhttp.setRequestHeader("Content-type", "application/json");
+                xhttp.send();
+            }
 	</script>
+	<style>
+	.thumbpane {
+		width:500px;
+		float:left;
+		background-color: #ff0;
+	}
+	.textpane {
+		width:500px;
+		height:500px;
+		float:right;
+		background-color: #f00;
+		overflow:scroll;
+	}
+	</style>
     </head>
     <body>
         Met deze knop Haal ik  op:
         <button type="button" id="buttoninput" onclick="test()">Ophalen van een NieuwsItem via Get</button>
         <hr>	
-        <div id="outputserver"></div>
+        <div class="thumbpane" id="outputserver"></div>
+        <div class="textpane" id="loadnews"></div>
     </body>
 </html>
