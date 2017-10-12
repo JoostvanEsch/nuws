@@ -10,7 +10,7 @@
                         document.getElementById("outputserver").innerHTML = "";
                             var data = JSON.parse(this.responseText);
                             for (i = 0; i < data.length; i++) {
-                                var textaccumulation = data[i].id + "<br><a href=\"www.google.nl\">" + data[i].title  + "</a><br><br>";
+                                var textaccumulation = data[i].id + "<br><a onclick='loadItem("+i+")'>" + data[i].title  + "</a><br><br>";
                                 document.getElementById("outputserver").innerHTML += textaccumulation;
                             }
                                 
@@ -19,7 +19,24 @@
                 xhttp.open("GET", "http://localhost:8082/nuwstitles");
                 xhttp.setRequestHeader("Content-type", "application/json");
                 xhttp.send();
-            }		
+            }	
+            function loadItem(n){
+                var xhttp = new XMLHttpRequest();
+                    xhttp.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                        document.getElementById("loadnews").innerHTML = "";
+                            var data = JSON.parse(this.responseText);
+                            
+                                var textaccumulation = data[n].id + "<br>" + data[n].title  + "<br><br>";
+                                document.getElementById("loadnews").innerHTML += textaccumulation;
+                            
+                                
+                        }
+                    };
+                xhttp.open("GET", "http://localhost:8082/nuwstitles");
+                xhttp.setRequestHeader("Content-type", "application/json");
+                xhttp.send();
+            }
 	</script>
 	<style>
 	.thumbpane {
