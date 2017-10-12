@@ -1,52 +1,31 @@
+
 <!DOCTYPE html>
 <html>
-	<head>
-		<script>
-
-			function versturen(){
-      			var newUrl= document.getElementById("nieuwsurlinput").value;
-      			var newTags= document.getElementById("nieuwstagsinput").value;
-				var nieuwsitem = '{"tags":["'+newTags+'"] ,"url":"'+newUrl+'"}'; 
-				console.log(nieuwsitem);
-				
-      			var xhttp = new XMLHttpRequest();
-				xhttp.onreadystatechange = function() {
-					if (this.readyState == 4 && this.status == 202) {
-  						document.getElementById("outputserver").innerHTML = this.responseText;
-					}
-				};
-      			xhttp.open("POST", "http://localhost:8082/nuwspost", true);
-				xhttp.setRequestHeader("Content-type", "application/json");
-				xhttp.send(nieuwsitem);
-			}
-			
-			function test(){
-          		var xhttp = new XMLHttpRequest();
-  				xhttp.onreadystatechange = function() {
-    					if (this.readyState == 4 && this.status == 200) {
-    						var data = JSON.parse(this.responseText);
-    						for (i = 0; i < data.length; i++)
-    						document.getElementById("outputserver").innerHTML += data[i].id + " " + data[i].tags + " "+ data[i].url + "<br>" + data[i].title + "<br>" + data[i].sub + "<br>" + data[i].bodytext + "<br><br>";
-    					}
-  				};
-          		xhttp.open("GET", "http://localhost:8082/nuws2");
-				xhttp.setRequestHeader("Content-type", "application/json");
-				xhttp.send();
-			}
-			
-		</script>
-	</head>
-	<body>
-			
-		Via dit invoerscherm en deze knop Post ik een NieuwsItem, met de naam die ik invoer.<br>
-		<input type="text" id="nieuwsurlinput" name="FirstName" value="https://www.nu.nl/voetbal/4959608/robben-van-beste-spelers-land-ooit-heeft-gehad.html"><br>
-		<input type="text" id="nieuwstagsinput" name="FirstName" value="Nieuws tags input"><br>
-		<button type="button" id="buttoninput" onclick="versturen()">Toevoegen van nieuwsitem vie POST</button>
-		<hr>
-		
-		Met deze knop Haal ik  op:
-		<button type="button" id="buttoninput" onclick="test()">Ophalen van een NieuwsItem via Get</button>
-		<hr>	
-		<div id="outputserver"></div>
-	</body>
+    <head>
+	<script>			
+            function test(){
+                var xhttp = new XMLHttpRequest();
+                    xhttp.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                        document.getElementById("outputserver").innerHTML = "";
+                            var data = JSON.parse(this.responseText);
+                            for (i = 0; i < data.length; i++) {
+                                var textaccumulation = data[i].id + " " + data[i].tags + " "+ data[i].url + "<br>" + data[i].title + "<br>" + data[i].sub + "<br>" + data[i].bodytext + "<br><br>";
+                                document.getElementById("outputserver").innerHTML += textaccumulation;
+                            }
+                                
+                        }
+                    };
+                xhttp.open("GET", "http://localhost:8082/nuws2");
+                xhttp.setRequestHeader("Content-type", "application/json");
+                xhttp.send();
+            }		
+	</script>
+    </head>
+    <body>
+        Met deze knop Haal ik  op:
+        <button type="button" id="buttoninput" onclick="test()">Ophalen van een NieuwsItem via Get</button>
+        <hr>	
+        <div id="outputserver"></div>
+    </body>
 </html>
