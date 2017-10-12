@@ -3,9 +3,9 @@
 <html>
     <head>
         <script>
-            function getUrl(){
-                var copiedurl = document.getElementById("NUNLframe").contentWindow.location.href;
-                document.getElementById("nieusurlinput").value = copiedurl;
+            function getUrl(){                               
+                document.getElementById("nieusurlinput").value = document.getElementById("NUNLframe").src;
+                document.getElementById("test").innerHTML = document.getElementById("NUNLframe").src;
             }
             function versturen(){
                 var newUrl= document.getElementById("nieuwsurlinput").value;
@@ -21,6 +21,19 @@
                 xhttp.open("POST", "http://localhost:8082/nuwspost", true);
                 xhttp.setRequestHeader("Content-type", "application/json");
                 xhttp.send(nieuwsitem);
+            }
+            
+            function deleteAll(){
+               console.log("ik doe het"); 
+               var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                       console.log(this.responseText);
+                    }
+                };
+                xhttp.open("GET", "http://localhost:8082/nuwsdelete", true);
+                xhttp.setRequestHeader("Content-type", "application/json");
+                xhttp.send();
             }
         </script>
         
@@ -45,7 +58,10 @@
             <input type="text" id="nieuwstagsinput" name="FirstName" value="Nieuws tags input"><br>
             <button type="button" id="buttongeturl" onclick="getUrl()">Kopieer url</button>
             <button type="button" id="buttoninput" onclick="versturen()">Toevoegen van nieuwsitem vie POST</button>
-            <br><br><br><br><br><br><br><br><br>
+            
+            <button type="button" id="buttonDeleteAll" onclick="deleteAll()">Verwijder alle items</button>
+            
+            <p id="test"></p>
             <hr>
         </div>
 	</body>

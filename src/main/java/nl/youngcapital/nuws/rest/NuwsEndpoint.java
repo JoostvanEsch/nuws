@@ -59,6 +59,12 @@ public class NuwsEndpoint {
 		return ar;
 	}
 	
+        @GetMapping("/nuwsdelete")
+        public void deleteNuws(){
+		System.out.println("endpoint werkt");
+                nuwsservice.deleteAllDatabase();
+        }
+        
 	@PostMapping("/nuwspost")
 	public void postEntiteit(@RequestBody NieuwsItem nieuwsitem) throws IOException{
 		//System.out.println("Jojo");

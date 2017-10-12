@@ -29,6 +29,11 @@ public class NuwsService {
 	public List<NieuwsItem> getAllFromDatabase() {
 		return (List<NieuwsItem>) nuwsrepository.findAll();
 	}
+        
+        public void deleteAllDatabase() {
+		nuwsrepository.deleteAll();
+		//return nieuwsitem;
+	}
 	
 	
 }
