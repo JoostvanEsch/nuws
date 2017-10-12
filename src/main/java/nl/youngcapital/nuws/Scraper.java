@@ -17,9 +17,9 @@ public class Scraper {
 	
 	public Scraper(String source) throws IOException{
 		this.source = source;
-		this.title = scrapeTitle(new URL(source));
-		this.subTitle = scrapeSubTitle(new URL(source));
-		this.body = scrapeBody(new URL(source));
+		//this.title = scrapeTitle(new URL(source));
+		//this.subTitle = scrapeSubTitle(new URL(source));
+		//this.body = scrapeBody(new URL(source));
 		
 	}
 
