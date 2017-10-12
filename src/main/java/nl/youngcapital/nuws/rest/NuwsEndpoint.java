@@ -32,8 +32,12 @@ public class NuwsEndpoint {
 	
 	@ResponseBody
 	@GetMapping("/nuws2/{id}")
-	public NieuwsItem getNuws2(@PathVariable long id) {
-		return nuwsservice.getFromDatabase(1);
+	public NieuwsItem getNuws2(@PathVariable long id) throws IOException{
+		NieuwsItem n = nuwsservice.getFromDatabase(id);
+		n.setTitle(new Scraper(n.getUrl()).scrapeTitle(new URL(n.getUrl())));
+		n.setSub(new Scraper(n.getUrl()).scrapeSubTitle(new URL(n.getUrl())));
+		n.setBodytext(new Scraper(n.getUrl()).scrapeBody(new URL(n.getUrl())));
+		return n;
 	}
 	
 	@ResponseBody
@@ -50,6 +54,19 @@ public class NuwsEndpoint {
 		return NIList;
 	}
 	
+	@ResponseBody
+	@GetMapping("/nuwstitles")
+	public List<NieuwsItem> getNuwsTitles() throws IOException{
+		
+		List<NieuwsItem> NITList = nuwsservice.getAllFromDatabase();
+		for (NieuwsItem n : NITList) {
+			n.setTitle(new Scraper(n.getUrl()).scrapeTitle(new URL(n.getUrl())));
+		}
+		
+		return NITList;
+	}
+	
+	
 	@GetMapping("/nuws3")
 	public ArrayList<Integer> getNuws3() {
 		ArrayList<Integer> ar = new ArrayList<Integer>();
@@ -59,7 +76,7 @@ public class NuwsEndpoint {
 		return ar;
 	}
 	
-        @GetMapping("/nuwsdelete")
+         @GetMapping("/nuwsdelete")
         public void deleteNuws(){
 		System.out.println("endpoint werkt");
                 nuwsservice.deleteAllDatabase();
