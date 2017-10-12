@@ -10,7 +10,8 @@
                         document.getElementById("outputserver").innerHTML = "";
                             var data = JSON.parse(this.responseText);
                             for (i = 0; i < data.length; i++) {
-                                var textaccumulation = data[i].id + "<br><a onclick='loadItem("+i+")'>" + data[i].title  + "</a><br><br>";
+                            	   var j = parseInt(i);
+                                var textaccumulation = data[j].id + "<br><a onclick='loadItem("+i+")'>" + data[j].title  + "</a><br><br>";
                                 document.getElementById("outputserver").innerHTML += textaccumulation;
                             }
                                 
@@ -25,15 +26,16 @@
                     xhttp.onreadystatechange = function() {
                         if (this.readyState == 4 && this.status == 200) {
                         document.getElementById("loadnews").innerHTML = "";
-                            var data = JSON.parse(this.responseText);
+                            var nieuwsitem = JSON.parse(this.responseText);
                             
-                                var textaccumulation = data[n].id + "<br>" + data[n].title  + "<br><br>";
+                                var textaccumulation = nieuwsitem.title  + "<br><br>" + nieuwsitem.sub + "<br><br>" + nieuwsitem.bodytext;
                                 document.getElementById("loadnews").innerHTML += textaccumulation;
                             
                                 
                         }
                     };
-                xhttp.open("GET", "http://localhost:8082/nuwstitles");
+                 var numb = parseInt(n+1);
+                xhttp.open("GET", "http://localhost:8082/nuws2/"+numb);
                 xhttp.setRequestHeader("Content-type", "application/json");
                 xhttp.send();
             }
@@ -45,10 +47,11 @@
 		background-color: #ff0;
 	}
 	.textpane {
-		width:500px;
+		width:200px;
 		height:500px;
 		float:right;
 		background-color: #f00;
+		overflow:scroll;
 	}
 	</style>
     </head>
