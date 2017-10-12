@@ -10,7 +10,7 @@
                         document.getElementById("outputserver").innerHTML = "";
                             var data = JSON.parse(this.responseText);
                             for (i = 0; i < data.length; i++) {
-                                var textaccumulation = data[i].id + " " + data[i].url + "<br>" + data[i].title  + "<br><br>";
+                                var textaccumulation = data[i].id + "<br><a href=\"www.google.nl\">" + data[i].title  + "</a><br><br>";
                                 document.getElementById("outputserver").innerHTML += textaccumulation;
                             }
                                 
@@ -21,11 +21,25 @@
                 xhttp.send();
             }		
 	</script>
+	<style>
+	.thumbpane {
+		width:500px;
+		float:left;
+		background-color: #ff0;
+	}
+	.textpane {
+		width:500px;
+		height:500px;
+		float:right;
+		background-color: #f00;
+	}
+	</style>
     </head>
     <body>
         Met deze knop Haal ik  op:
         <button type="button" id="buttoninput" onclick="test()">Ophalen van een NieuwsItem via Get</button>
         <hr>	
-        <div id="outputserver"></div>
+        <div class="thumbpane" id="outputserver"></div>
+        <div class="textpane" id="loadnews"></div>
     </body>
 </html>
