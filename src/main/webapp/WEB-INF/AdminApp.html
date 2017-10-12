@@ -4,7 +4,7 @@
     <head>
         <script>
             function getUrl(){                               
-                document.getElementById("nieusurlinput").value = document.getElementById("NUNLframe").src;
+                document.getElementById("nieuwsurlinput").value = document.getElementById("NUNLframe").contentWindow.ocation.href;
                 document.getElementById("test").innerHTML = document.getElementById("NUNLframe").src;
             }
             function versturen(){
