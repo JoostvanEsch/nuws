@@ -1,33 +1,68 @@
-// hallo ik ben joost
+
 <!DOCTYPE html>
 <html>
-	<head>
-		<script>
-
-			function versturen(){
-      			var newUrl= document.getElementById("nieuwsurlinput").value;
-      			var newTags= document.getElementById("nieuwstagsinput").value;
-				var nieuwsitem = '{"tags":["'+newTags+'"] ,"url":"'+newUrl+'"}'; 
-				console.log(nieuwsitem);
-				
-      			var xhttp = new XMLHttpRequest();
-				xhttp.onreadystatechange = function() {
-					if (this.readyState == 4 && this.status == 202) {
-  						document.getElementById("outputserver").innerHTML = this.responseText;
-					}
-				};
-      			xhttp.open("POST", "http://localhost:8082/nuwspost", true);
-				xhttp.setRequestHeader("Content-type", "application/json");
-				xhttp.send(nieuwsitem);
-			}
-			
-		</script>
-	</head>
-	<body>	
-		Via dit invoerscherm en deze knop Post ik een NieuwsItem, met de naam die ik invoer.<br>
-		<input type="text" id="nieuwsurlinput" name="FirstName" value="https://www.nu.nl/voetbal/4959608/robben-van-beste-spelers-land-ooit-heeft-gehad.html"><br>
-		<input type="text" id="nieuwstagsinput" name="FirstName" value="Nieuws tags input"><br>
-		<button type="button" id="buttoninput" onclick="versturen()">Toevoegen van nieuwsitem vie POST</button>
-		<hr>
+    <head>
+        <script>
+            function getUrl(){                               
+                document.getElementById("nieusurlinput").value = document.getElementById("NUNLframe").src;
+                document.getElementById("test").innerHTML = document.getElementById("NUNLframe").src;
+            }
+            function versturen(){
+                var newUrl= document.getElementById("nieuwsurlinput").value;
+                var newTags= document.getElementById("nieuwstagsinput").value;
+                var nieuwsitem = '{"tags":["'+newTags+'"] ,"url":"'+newUrl+'"}'; 
+                console.log(nieuwsitem);
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 202) {
+                        document.getElementById("outputserver").innerHTML = this.responseText;
+                    }
+                };
+                xhttp.open("POST", "http://localhost:8082/nuwspost", true);
+                xhttp.setRequestHeader("Content-type", "application/json");
+                xhttp.send(nieuwsitem);
+            }
+            
+            function deleteAll(){
+               console.log("ik doe het"); 
+               var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                       console.log(this.responseText);
+                    }
+                };
+                xhttp.open("GET", "http://localhost:8082/nuwsdelete", true);
+                xhttp.setRequestHeader("Content-type", "application/json");
+                xhttp.send();
+            }
+        </script>
+        
+        <style>
+            iframe {
+                position: default;
+                border: none;
+                top: 10; right: 10;
+                bottom: 10; left: 10;
+                width: 95%;
+                height: 95%;
+            }
+        </style>
+    </head>
+    <body>	
+        <div style='float:left; width:50%; height:1000px'>
+            <iframe id="NUNLframe" src="https://www.nu.nl/"></iframe> 
+        </div>
+        <div style='float:right; width:50%; height:1000px'>
+            Via dit invoerscherm en deze knop Post ik een NieuwsItem, met de naam die ik invoer.<br>
+            <input type="text" id="nieuwsurlinput" name="FirstName" value="https://www.nu.nl/voetbal/4959608/robben-van-beste-spelers-land-ooit-heeft-gehad.html"><br>
+            <input type="text" id="nieuwstagsinput" name="FirstName" value="Nieuws tags input"><br>
+            <button type="button" id="buttongeturl" onclick="getUrl()">Kopieer url</button>
+            <button type="button" id="buttoninput" onclick="versturen()">Toevoegen van nieuwsitem vie POST</button>
+            
+            <button type="button" id="buttonDeleteAll" onclick="deleteAll()">Verwijder alle items</button>
+            
+            <p id="test"></p>
+            <hr>
+        </div>
 	</body>
 </html>
