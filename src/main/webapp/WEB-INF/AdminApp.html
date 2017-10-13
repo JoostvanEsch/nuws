@@ -3,10 +3,9 @@
 <html>
     <head>
         <script>
-            function getUrl(){  
-                //console.log("getUrl")
-                document.getElementById("nieuwsurlinput").value = document.referrer;
-                document.getElementById("test").innerHTML = document.referrer;
+            function getUrl(){                               
+                document.getElementById("nieuwsurlinput").value = document.getElementById("NUNLframe").contentWindow.ocation.href;
+                document.getElementById("test").innerHTML = document.getElementById("NUNLframe").src;
             }
             function versturen(){
                 var newUrl= document.getElementById("nieuwsurlinput").value;
