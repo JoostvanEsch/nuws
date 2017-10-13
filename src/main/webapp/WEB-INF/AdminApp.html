@@ -22,6 +22,16 @@
                 xhttp.setRequestHeader("Content-type", "application/json");
                 xhttp.send(nieuwsitem);
             }
+            
+            function getNUNLlinks(){
+                var lijst = LinkList.testtest;
+                
+                
+                
+                    document.getElementById("artikellijst").innerHTML = lijst;
+                
+            }
+            
             function getTags(){
                 var xhttp = new XMLHttpRequest();
                     xhttp.onreadystatechange = function() {
@@ -66,9 +76,9 @@
             }
         </style>
     </head>
-    <body>	
+    <body onload="getNUNLlinks()">
         <div style='float:left; width:50%; height:1000px'>
-            <iframe id="NUNLframe" src="https://www.nu.nl/"></iframe> 
+            <p id='artikellijst'></p> 
         </div>
         <div style='float:right; width:50%; height:1000px'>
             <br>
