@@ -13,10 +13,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import nl.youngcapital.nuws.Gebruiker;
 import nl.youngcapital.nuws.NieuwsItem;
 import nl.youngcapital.nuws.Scraper;
 import nl.youngcapital.nuws.Tag;
 import nl.youngcapital.nuws.service.NuwsService;
+
 
 
 @RestController
@@ -103,7 +105,10 @@ public class NuwsEndpoint {
 		nuwsservice.addToDatabase(nieuwsitem);
 	}
 	
-	
+	@PostMapping("/register")
+	public void postRegistration(@RequestBody Gebruiker gebruiker){
+		nuwsservice.addToDatabase(gebruiker);
+	}
 	
 	
 	
