@@ -22,6 +22,24 @@
                 xhttp.setRequestHeader("Content-type", "application/json");
                 xhttp.send(nieuwsitem);
             }
+            function getTags(){
+                var xhttp = new XMLHttpRequest();
+                    xhttp.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                        document.getElementById("taglist").innerHTML = "";
+                            var data = JSON.parse(this.responseText);
+                            for (i = 0; i < data.length; i++) {
+                            	var j = parseInt(i);
+                                var textaccumulation = "<label class=container><input id='"+data[j].id+"' type='checkbox'>"+data[j].tag+"<span class='checkmark'></span></label><br>"
+                                document.getElementById("taglist").innerHTML += textaccumulation;
+                            }
+                                
+                        }
+                    };
+                xhttp.open("GET", "http://localhost:8082/nuwstags");
+                xhttp.setRequestHeader("Content-type", "application/json");
+                xhttp.send();
+            }
             
             function deleteAll(){
                //console.log("ik doe het"); 
@@ -56,21 +74,8 @@
             <br>
             <button type="button" id="buttongeturl" onclick="getUrl()">Kopieer url</button>
             <input type="text" id="nieuwsurlinput" name="FirstName" value="https://www.nu.nl/voetbal/4959608/robben-van-beste-spelers-land-ooit-heeft-gehad.html"><br>
-            <input type="text" id="nieuwstagsinput" name="FirstName" value="Nieuws tags input"><br>
-            <p>
-                <label class="container" id="1">Sport
-                    <input type="checkbox">
-                    <span class="checkmark"></span>
-                </label><br>
-                <label class="container" id="2">Entertainment
-                    <input type="checkbox">
-                    <span class="checkmark"></span>
-                </label><br>
-                <label class="container" id="3">Dieren
-                    <input type="checkbox">
-                    <span class="checkmark"></span>
-                </label><br>
-            </p>
+            <button type="button" id="tagbutton" onclick="getTags()">Voeg tags toe</button>
+            <p id="taglist"></p>
             <button type="button" id="buttoninput" onclick="versturen()">Toevoegen van nieuwsitem vie POST</button>
             
             <button type="button" id="buttonDeleteAll" onclick="deleteAll()">Verwijder alle items</button>
