@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import nl.youngcapital.nuws.NieuwsItem;
 import nl.youngcapital.nuws.Scraper;
+import nl.youngcapital.nuws.Tag;
 import nl.youngcapital.nuws.service.NuwsService;
 
 
@@ -76,11 +77,19 @@ public class NuwsEndpoint {
 		return ar;
 	}
 	
-         @GetMapping("/nuwsdelete")
+        @GetMapping("/nuwsdelete")
         public void deleteNuws(){
 		System.out.println("endpoint werkt");
                 nuwsservice.deleteAllDatabase();
         }
+        
+        @ResponseBody
+	@GetMapping("/nuwstags")
+	public List<Tag> getTags() throws IOException{
+		System.out.println("EndPoint wordt geactiveerd");
+		List<Tag> TagList = nuwsservice.getTagsFromDatabase();
+		return TagList;
+	}
         
 	@PostMapping("/nuwspost")
 	public void postEntiteit(@RequestBody NieuwsItem nieuwsitem) throws IOException{

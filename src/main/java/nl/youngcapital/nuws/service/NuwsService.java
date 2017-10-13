@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import nl.youngcapital.nuws.NieuwsItem;
+import nl.youngcapital.nuws.Tag;
 
 @Service
 @Transactional
@@ -15,6 +16,9 @@ public class NuwsService {
 	
 	@Autowired
 	NuwsRepository nuwsrepository;
+        
+        @Autowired
+	TagRepository tagrepository;
 
 	public void addToDatabase(NieuwsItem nieuwsitem) {
 		nuwsrepository.save(nieuwsitem);
@@ -28,6 +32,11 @@ public class NuwsService {
 	
 	public List<NieuwsItem> getAllFromDatabase() {
 		return (List<NieuwsItem>) nuwsrepository.findAll();
+	}
+        
+        public List<Tag> getTagsFromDatabase() {
+                System.out.println("service werkt");
+		return (List<Tag>) tagrepository.findAll();
 	}
         
         public void deleteAllDatabase() {
