@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import nl.youngcapital.nuws.Gebruiker;
 import nl.youngcapital.nuws.NieuwsItem;
 import nl.youngcapital.nuws.Tag;
+
 
 @Service
 @Transactional
@@ -19,9 +21,17 @@ public class NuwsService {
         
         @Autowired
 	TagRepository tagrepository;
+        
+    @Autowired
+    GebruikerRepository gebruikerrepository;
 
 	public void addToDatabase(NieuwsItem nieuwsitem) {
 		nuwsrepository.save(nieuwsitem);
+		//return nieuwsitem;
+	}
+	
+	public void addToDatabase(Gebruiker gebruiker) {
+		gebruikerrepository.save(gebruiker);
 		//return nieuwsitem;
 	}
 	
