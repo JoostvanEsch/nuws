@@ -10,7 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LinkList {
-    static List<String> nunllijst;
+    private static List<String> nunllijst;
+    private static String test = "testinhoud";
 
     public static void generateList() throws IOException {
 
@@ -48,4 +49,14 @@ public class LinkList {
         
         
     }
+
+    public List<String> getNunllijst() {
+        return nunllijst;
+    }
+
+    public String getTest() {
+        return test;
+    }
+    
+    
 }

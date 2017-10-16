@@ -24,11 +24,22 @@
             }
             
             function getNUNLlinks(){
-                var lijst = LinkList.testtest;
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function(){
+                    if (this.readyState == 4 && this.status == 200){
+                        document.getElementById("artikellijst").innerHTML = "";
+                        var data = JSON.parse(this.responseText);
+                        //for (x in data){
+                         //   var lijst = x
+                            document.getElementById("artikellijst").innerHTML += data; 
+                       // }
+                    } 
+                }
+                xhttp.open("GET", "http://localhost:8082/nunllinks");
+                xhttp.setRequestHeader("Content-type", "application/json");
+                xhttp.send();  
                 
-                
-                
-                    document.getElementById("artikellijst").innerHTML = lijst;
+                    
                 
             }
             

@@ -22,18 +22,18 @@ public class NuwsService {
         @Autowired
 	TagRepository tagrepository;
         
-    @Autowired
-    GebruikerRepository gebruikerrepository;
+    //@Autowired
+    //GebruikerRepository gebruikerrepository;
 
 	public void addToDatabase(NieuwsItem nieuwsitem) {
 		nuwsrepository.save(nieuwsitem);
 		//return nieuwsitem;
 	}
 	
-	public void addToDatabase(Gebruiker gebruiker) {
-		gebruikerrepository.save(gebruiker);
-		//return nieuwsitem;
-	}
+	//public void addToDatabase(Gebruiker gebruiker) {
+	//	gebruikerrepository.save(gebruiker);
+	//	//return nieuwsitem;
+	//}
 	
 	public NieuwsItem getFromDatabase(long id) {
 		NieuwsItem n = nuwsrepository.findOne(id);

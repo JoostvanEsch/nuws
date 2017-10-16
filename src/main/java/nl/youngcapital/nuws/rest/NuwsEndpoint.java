@@ -18,7 +18,7 @@ import nl.youngcapital.nuws.NieuwsItem;
 import nl.youngcapital.nuws.Scraper;
 import nl.youngcapital.nuws.Tag;
 import nl.youngcapital.nuws.service.NuwsService;
-
+import nl.youngcapital.nuws.LinkList;
 
 
 @RestController
@@ -88,6 +88,14 @@ public class NuwsEndpoint {
         }
         
         @ResponseBody
+	@GetMapping("/nunllinks")
+        public String getNUNLlinks(){
+            LinkList x = new LinkList();
+            String NUNLlist = x.getTest();
+            return NUNLlist;
+        }
+        
+        @ResponseBody
 	@GetMapping("/nuwstags")
 	public List<Tag> getTags() throws IOException{
 		System.out.println("EndPoint wordt geactiveerd");
@@ -107,10 +115,10 @@ public class NuwsEndpoint {
 		nuwsservice.addToDatabase(nieuwsitem);
 	}
 	
-	@PostMapping("/register")
-	public void postRegistration(@RequestBody Gebruiker gebruiker){
-		nuwsservice.addToDatabase(gebruiker);
-	}
+	//@PostMapping("/register")
+	//public void postRegistration(@RequestBody Gebruiker gebruiker){
+	//	nuwsservice.addToDatabase(gebruiker);
+	//}
 	
 	
 	
