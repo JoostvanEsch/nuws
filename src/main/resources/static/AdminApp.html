@@ -29,9 +29,10 @@
                         for (i = 0; i < data.length; i++){
                             var lijst = data[i];
                             var indexA = lijst.indexOf("https")
-                            var indexB = lijst.indexOf(" target=")
+                            var indexB = lijst.indexOf("\" target=")
                             var lijstUitgekleed = lijst.substring(indexA, indexB) 
-                            var lijstfinal = lijst + " ---> <button type='button' onclick='kopieerURL()'>kopieer URL</button><br>";
+                            var lijstfinal = lijst + " -> <button type='button' onclick='kopieerURL('"+lijstUitgekleed+"')'>kopieer URL</button><br>";
+                            alert(lijstUitgekleed);
                             document.getElementById("artikellijst").innerHTML += lijstfinal; 
                         }
                     } 
@@ -41,14 +42,11 @@
                 xhttp.send();  
              } 
            
-            function kopieerURL(){
+            function kopieerURL(x){
                 console.log("kopieerURL werkt")
-                document.getElementById("nieuwsurlinput").value = "x";
+                document.getElementById("nieuwsurlinput").value = x;
             }
                     
-                
-           
-            
             function getTags(){
                 var xhttp = new XMLHttpRequest();
                     xhttp.onreadystatechange = function() {
