@@ -108,8 +108,21 @@ public class NuwsEndpoint {
 	}
 	
 	@PostMapping("/register")
-	public void postRegistration(@RequestBody Gebruiker gebruiker){
+	public boolean postRegistration(@RequestBody Gebruiker gebruiker){
+		ArrayList<Gebruiker> userList = new ArrayList<Gebruiker>();
+		boolean userNameTaken = false;
+		
+		userList = nuwsservice.getUsersFromDatabase();
+		for (Gebruiker g : userList) {
+			if (g.getNaam().equalsIgnoreCase(gebruiker.getNaam())) userNameTaken = true;
+		}
+		if (userNameTaken == false) {
 		nuwsservice.addToDatabase(gebruiker);
+		return true;
+		} else {
+		System.out.println("username taken");
+		return false;
+		}
 	}
 	
 	

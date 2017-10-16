@@ -1,6 +1,7 @@
 package nl.youngcapital.nuws.service;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,10 @@ public class NuwsService {
 	public void addToDatabase(Gebruiker gebruiker) {
 		gebruikerrepository.save(gebruiker);
 		//return nieuwsitem;
+	}
+	
+	public ArrayList<Gebruiker> getUsersFromDatabase() {
+		return (ArrayList<Gebruiker>) gebruikerrepository.findAll();
 	}
 	
 	public NieuwsItem getFromDatabase(long id) {
