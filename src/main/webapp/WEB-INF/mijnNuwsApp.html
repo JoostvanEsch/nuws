@@ -41,21 +41,19 @@
             }
             
             function register(){
+            	var newUser= document.getElementById("username").value;
+                var newPass= document.getElementById("password").value;
+                var gebruiker = '{"naam":"'+newUser+'" ,"password":"'+newPass+'"}'; 
+                console.log(gebruiker);
                 var xhttp = new XMLHttpRequest();
-                    xhttp.onreadystatechange = function() {
-                        if (this.readyState == 4 && this.status == 200) {
-                        document.getElementById("loadnews").innerHTML = "";
-                            var nieuwsitem = JSON.parse(this.responseText);
-                            
-                                var textaccumulation = nieuwsitem.title  + "<br><br>" + nieuwsitem.sub + "<br><br>" + nieuwsitem.bodytext;
-                                document.getElementById("loadnews").innerHTML += textaccumulation;
-                            
-                                
-                        }
-                    };
-                xhttp.open("GET", "http://localhost:8082/register/");
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 202) {
+                        document.getElementById("outputserver").innerHTML = this.responseText;
+                    }
+                };
+                xhttp.open("POST", "http://localhost:8082/register", true);
                 xhttp.setRequestHeader("Content-type", "application/json");
-                xhttp.send();
+                xhttp.send(gebruiker);
             }
             
             
@@ -101,8 +99,8 @@
         <div class="textpane" id="loadnews"></div>
         <div>
         
-  			Username: <input type="text" name="username"><br>
-  			Password: <input type="text" name="password"><br>
+  			Username: <input type="text" id="username"><br>
+  			Password: <input type="text" id="password"><br>
  			 <input type="submit" value="Register" onclick="register()">
 		
         </div>
