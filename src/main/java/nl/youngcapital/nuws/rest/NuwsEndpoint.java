@@ -56,9 +56,7 @@ public class NuwsEndpoint {
 		
 		return NIList;
 	}
-	
-       
-        
+	     
 	@ResponseBody
 	@GetMapping("/nuwstitles")
 	public List<NieuwsItem> getNuwsTitles() throws IOException{
