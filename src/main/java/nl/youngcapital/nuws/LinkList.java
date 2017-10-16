@@ -10,7 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LinkList {
-    static List<String> nunllijst;
+    private static List<String> nunllijst = new ArrayList<>();
+
+    public LinkList() {
+    }
 
     public static void generateList() throws IOException {
 
@@ -33,8 +36,9 @@ public class LinkList {
         while ((line = br.readLine()) != null) {
         	if (line.contains(startText)) {startMarker++;}
         	if (line.contains(stopText)) {stopMarker++;}
-        	if (startMarker == 1 && stopMarker == 0 && line.contains("<a href") && line.contains(".html") && !(line.contains("/video")) && !(line.contains("/advertorial"))) {
+        	if (startMarker == 1 && stopMarker == 0 && line.contains("<a href") && line.contains(".html") && !(line.contains("/video")) && !(line.contains("/advertorial")) && !(line.contains("/nushop"))) {
         		relevantCode.add("https://www.nu.nl" + line.substring(line.indexOf("/"), (line.indexOf(".html")+5)));
+                        
             //System.out.println(line);
         	}
         }
@@ -42,10 +46,16 @@ public class LinkList {
         for (String s : relevantCode) {
         		if (true) {
         			Scraper sc = new Scraper(s);
-        			nunllijst.add("<a href=\"" + s + "\" target=\"previewPane\">" + sc.scrapeTitle(new URL(s)) +"</a><br>");
+        			nunllijst.add("<a href=\"" + s + "\" target=\"nunl_iframe\">" + sc.scrapeTitle(new URL(s)) +"</a>");
         		}
         }
+        System.out.println(nunllijst.get(0));
         
         
     }
+
+    public static List<String> getNunllijst() {
+        return nunllijst;
+    }
+ 
 }
