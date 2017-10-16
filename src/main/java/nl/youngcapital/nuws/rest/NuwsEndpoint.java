@@ -104,20 +104,28 @@ public class NuwsEndpoint {
         
 	@PostMapping("/nuwspost")
 	public void postEntiteit(@RequestBody NieuwsItem nieuwsitem) throws IOException{
-		//System.out.println("Jojo");
-		//System.out.println(nieuwsitem.getUrl());
-		//System.out.println("Jojo");
-		//nieuwsitem.setTitle(new Scraper(nieuwsitem.getUrl()).scrapeTitle(new URL(nieuwsitem.getUrl())));
-		//nieuwsitem.setSub(new Scraper(nieuwsitem.getUrl()).scrapeSubTitle(new URL(nieuwsitem.getUrl())));
-		//nieuwsitem.setBodytext(new Scraper(nieuwsitem.getUrl()).scrapeBody(new URL(nieuwsitem.getUrl())).substring(0, 256));
-		
 		nuwsservice.addToDatabase(nieuwsitem);
 	}
 	
-	//@PostMapping("/register")
-	//public void postRegistration(@RequestBody Gebruiker gebruiker){
-	//	nuwsservice.addToDatabase(gebruiker);
-	//}
+
+	@PostMapping("/register")
+	public boolean postRegistration(@RequestBody Gebruiker gebruiker){
+		ArrayList<Gebruiker> userList = new ArrayList<Gebruiker>();
+		boolean userNameTaken = false;
+		
+		userList = nuwsservice.getUsersFromDatabase();
+		for (Gebruiker g : userList) {
+			if (g.getNaam().equalsIgnoreCase(gebruiker.getNaam())) userNameTaken = true;
+		}
+		if (userNameTaken == false) {
+		nuwsservice.addToDatabase(gebruiker);
+		return true;
+		} else {
+		System.out.println("username taken");
+		return false;
+		}
+	}
+
 	
 	
 	

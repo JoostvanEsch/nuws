@@ -1,6 +1,7 @@
 package nl.youngcapital.nuws.service;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,21 +20,25 @@ public class NuwsService {
 	@Autowired
 	NuwsRepository nuwsrepository;
         
-        @Autowired
+    @Autowired
 	TagRepository tagrepository;
         
-    //@Autowired
-    //GebruikerRepository gebruikerrepository;
+    @Autowired
+    GebruikerRepository gebruikerrepository;
 
 	public void addToDatabase(NieuwsItem nieuwsitem) {
 		nuwsrepository.save(nieuwsitem);
 		//return nieuwsitem;
 	}
 	
-	//public void addToDatabase(Gebruiker gebruiker) {
-	//	gebruikerrepository.save(gebruiker);
-	//	//return nieuwsitem;
-	//}
+	public void addToDatabase(Gebruiker gebruiker) {
+		gebruikerrepository.save(gebruiker);
+		//return nieuwsitem;
+	}
+	
+	public ArrayList<Gebruiker> getUsersFromDatabase() {
+		return (ArrayList<Gebruiker>) gebruikerrepository.findAll();
+	}
 	
 	public NieuwsItem getFromDatabase(long id) {
 		NieuwsItem n = nuwsrepository.findOne(id);
