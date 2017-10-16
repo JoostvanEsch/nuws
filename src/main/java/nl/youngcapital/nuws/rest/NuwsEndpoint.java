@@ -18,7 +18,7 @@ import nl.youngcapital.nuws.NieuwsItem;
 import nl.youngcapital.nuws.Scraper;
 import nl.youngcapital.nuws.Tag;
 import nl.youngcapital.nuws.service.NuwsService;
-
+import nl.youngcapital.nuws.LinkList;
 
 
 @RestController
@@ -56,9 +56,7 @@ public class NuwsEndpoint {
 		
 		return NIList;
 	}
-	
-       
-        
+	     
 	@ResponseBody
 	@GetMapping("/nuwstitles")
 	public List<NieuwsItem> getNuwsTitles() throws IOException{
@@ -88,6 +86,15 @@ public class NuwsEndpoint {
         }
         
         @ResponseBody
+	@GetMapping("/nunllinks")
+        public List<String> getNUNLlinks()throws IOException {
+            System.out.println("getNUNLlinks EndPoint wordt geactiveerd");
+            LinkList.generateList();
+            List<String> y = LinkList.getNunllijst();
+            return y;
+        }
+        
+        @ResponseBody
 	@GetMapping("/nuwstags")
 	public List<Tag> getTags() throws IOException{
 		System.out.println("EndPoint wordt geactiveerd");
@@ -97,16 +104,10 @@ public class NuwsEndpoint {
         
 	@PostMapping("/nuwspost")
 	public void postEntiteit(@RequestBody NieuwsItem nieuwsitem) throws IOException{
-		//System.out.println("Jojo");
-		//System.out.println(nieuwsitem.getUrl());
-		//System.out.println("Jojo");
-		//nieuwsitem.setTitle(new Scraper(nieuwsitem.getUrl()).scrapeTitle(new URL(nieuwsitem.getUrl())));
-		//nieuwsitem.setSub(new Scraper(nieuwsitem.getUrl()).scrapeSubTitle(new URL(nieuwsitem.getUrl())));
-		//nieuwsitem.setBodytext(new Scraper(nieuwsitem.getUrl()).scrapeBody(new URL(nieuwsitem.getUrl())).substring(0, 256));
-		
 		nuwsservice.addToDatabase(nieuwsitem);
 	}
 	
+
 	@PostMapping("/register")
 	public boolean postRegistration(@RequestBody Gebruiker gebruiker){
 		ArrayList<Gebruiker> userList = new ArrayList<Gebruiker>();
@@ -124,6 +125,7 @@ public class NuwsEndpoint {
 		return false;
 		}
 	}
+
 	
 	
 	

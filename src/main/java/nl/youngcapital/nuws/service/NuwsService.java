@@ -20,7 +20,7 @@ public class NuwsService {
 	@Autowired
 	NuwsRepository nuwsrepository;
         
-        @Autowired
+    @Autowired
 	TagRepository tagrepository;
         
     @Autowired
