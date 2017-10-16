@@ -89,10 +89,11 @@ public class NuwsEndpoint {
         
         @ResponseBody
 	@GetMapping("/nunllinks")
-        public String getNUNLlinks(){
-            LinkList x = new LinkList();
-            String NUNLlist = x.getTest();
-            return NUNLlist;
+        public List<String> getNUNLlinks()throws IOException {
+            System.out.println("getNUNLlinks EndPoint wordt geactiveerd");
+            LinkList.generateList();
+            List<String> y = LinkList.getNunllijst();
+            return y;
         }
         
         @ResponseBody

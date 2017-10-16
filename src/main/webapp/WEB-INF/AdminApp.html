@@ -3,10 +3,7 @@
 <html>
     <head>
         <script>
-            function getUrl(){                               
-                document.getElementById("nieuwsurlinput").value = document.getElementById("NUNLframe").contentWindow.ocation.href;
-                document.getElementById("test").innerHTML = document.getElementById("NUNLframe").src;
-            }
+            
             function versturen(){
                 var newUrl= document.getElementById("nieuwsurlinput").value;
                 var newTags= document.getElementById("nieuwstagsinput").value;
@@ -29,19 +26,28 @@
                     if (this.readyState == 4 && this.status == 200){
                         document.getElementById("artikellijst").innerHTML = "";
                         var data = JSON.parse(this.responseText);
-                        //for (x in data){
-                         //   var lijst = x
-                            document.getElementById("artikellijst").innerHTML += data; 
-                       // }
+                        for (i = 0; i < data.length; i++){
+                            var lijst = data[i];
+                            var indexA = lijst.indexOf("https")
+                            var indexB = lijst.indexOf(" target=")
+                            var lijstUitgekleed = lijst.substring(indexA, indexB) 
+                            var lijstfinal = lijst + " ---> <button type='button' onclick='kopieerURL()'>kopieer URL</button><br>";
+                            document.getElementById("artikellijst").innerHTML += lijstfinal; 
+                        }
                     } 
-                }
-                xhttp.open("GET", "http://localhost:8082/nunllinks");
+                };
+                xhttp.open("GET", "http://localhost:8082/nunllinks", true);
                 xhttp.setRequestHeader("Content-type", "application/json");
                 xhttp.send();  
-                
+             } 
+           
+            function kopieerURL(){
+                console.log("kopieerURL werkt")
+                document.getElementById("nieuwsurlinput").value = "x";
+            }
                     
                 
-            }
+           
             
             function getTags(){
                 var xhttp = new XMLHttpRequest();
@@ -80,17 +86,33 @@
             iframe {
                 position: default;
                 border: none;
-                top: 10; right: 10;
-                bottom: 10; left: 10;
-                width: 95%;
-                height: 95%;
+                height: 100%;
+                width: 100%;
             }
+            
+            #linkfield{
+                height: 30%;
+                overflow-y: scroll;
+            }
+            #iframefield{
+                height: 70%;
+            }
+            #linkerhelft{
+                padding: 20;
+            }
+
         </style>
     </head>
     <body onload="getNUNLlinks()">
-        <div style='float:left; width:50%; height:1000px'>
-            <p id='artikellijst'></p> 
+        <div id='linkerhelft' style='float:left; width:50%; height:1000px'>
+            <div id='linkfield'>
+                <p id='artikellijst'></p> 
+            </div>
+            <div id='iframefield'>
+                <iframe name='nunl_iframe'></iframe>
+            </div>
         </div>
+        
         <div style='float:right; width:50%; height:1000px'>
             <br>
             <button type="button" id="buttongeturl" onclick="getUrl()">Kopieer url</button>
