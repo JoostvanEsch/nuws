@@ -7,9 +7,10 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-
+import java.util.List;
 
 public class LinkList {
+    static List<String> nunllijst;
 
     public static void generateList() throws IOException {
 
@@ -41,7 +42,7 @@ public class LinkList {
         for (String s : relevantCode) {
         		if (true) {
         			Scraper sc = new Scraper(s);
-        			System.out.println("<a href=\"" + s + "\" target=\"previewPane\">" + sc.scrapeTitle(new URL(s)) +"</a><br>");
+        			nunllijst.add("<a href=\"" + s + "\" target=\"previewPane\">" + sc.scrapeTitle(new URL(s)) +"</a><br>");
         		}
         }
         
