@@ -27,7 +27,14 @@ public class NuwsService {
     GebruikerRepository gebruikerrepository;
 
 	public void addToDatabase(NieuwsItem nieuwsitem) {
-		nuwsrepository.save(nieuwsitem);
+		 System.out.println("service werkt");
+                 nuwsrepository.save(nieuwsitem);
+		//return nieuwsitem;
+	}
+        
+        public void addTagToDatabase(Tag tag) {
+		tagrepository.save(tag);
+               
 		//return nieuwsitem;
 	}
 	
@@ -50,7 +57,7 @@ public class NuwsService {
 	}
         
         public List<Tag> getTagsFromDatabase() {
-                System.out.println("service werkt");
+               
 		return (List<Tag>) tagrepository.findAll();
 	}
         

@@ -4,10 +4,19 @@
     <head>
         <script>
             
-            function versturen(){
+            function convertTagListToString(){
+                var taglist = getTagsForAddingNewsitem();
+                var tagstring = ""
+                console.log("convertTagListToString");
+                for (x in taglist){
+                    console.log(x);
+                } 
+            }
+            function newNieuwsItem(){
+                //convertTagListToString()
                 var newUrl= document.getElementById("nieuwsurlinput").value;
-                var newTags= document.getElementById("nieuwstagsinput").value;
-                var nieuwsitem = '{"tags":["'+newTags+'"] ,"url":"'+newUrl+'"}'; 
+                var newTags = "test tag";
+                var nieuwsitem = '{"url":"'+newUrl+'"}'; 
                 //console.log(nieuwsitem);
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function() {
@@ -19,6 +28,11 @@
                 xhttp.setRequestHeader("Content-type", "application/json");
                 xhttp.send(nieuwsitem);
             }
+             
+            function kopieerURL(value){
+                console.log("kopieerURL werkt");
+                document.getElementById("nieuwsurlinput").value = value;
+            }
             
             function getNUNLlinks(){
                 var xhttp = new XMLHttpRequest();
@@ -28,11 +42,10 @@
                         var data = JSON.parse(this.responseText);
                         for (i = 0; i < data.length; i++){
                             var lijst = data[i];
-                            var indexA = lijst.indexOf("https")
-                            var indexB = lijst.indexOf("\" target=")
-                            var lijstUitgekleed = lijst.substring(indexA, indexB) 
-                            var lijstfinal = lijst + " -> <button type='button' onclick='kopieerURL('"+lijstUitgekleed+"')'>kopieer URL</button><br>";
-                            alert(lijstUitgekleed);
+                            var indexA = lijst.indexOf("https");
+                            var indexB = lijst.indexOf("\" target=");
+                            var lijstUitgekleed = lijst.substring(indexA, indexB); 
+                            var lijstfinal = lijst + " -> <button id='button' type='button' onclick='kopieerURL(\""+ lijstUitgekleed + "\")'>copy URL</button><br>";
                             document.getElementById("artikellijst").innerHTML += lijstfinal; 
                         }
                     } 
@@ -42,11 +55,20 @@
                 xhttp.send();  
              } 
            
-            function kopieerURL(x){
-                console.log("kopieerURL werkt")
-                document.getElementById("nieuwsurlinput").value = x;
-            }
-                    
+           
+                function getTagsForAddingNewsitem(){
+                var xhttp = new XMLHttpRequest();
+                    xhttp.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                            var data = JSON.parse(this.responseText);
+                            return data;
+                         }
+                    };
+                xhttp.open("GET", "http://localhost:8082/nuwstags");
+                xhttp.setRequestHeader("Content-type", "application/json");
+                xhttp.send();
+            }  
+            
             function getTags(){
                 var xhttp = new XMLHttpRequest();
                     xhttp.onreadystatechange = function() {
@@ -78,6 +100,26 @@
                 xhttp.setRequestHeader("Content-type", "application/json");
                 xhttp.send();
             }
+            
+            function newTag(){
+            	var newtag= document.getElementById("newTagInput").value;
+                var tag = '{"tag":"'+newtag+'"}'; 
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        console.log(this.responseText);
+                        getTags();
+                        document.getElementById("newTagInput").value = "";
+                    }
+                };
+                xhttp.open("POST", "http://localhost:8082/newtag", true);
+                xhttp.setRequestHeader("Content-type", "application/json");
+                xhttp.send(tag);
+                
+                
+            }
+                
+   
         </script>
         
         <style>
@@ -98,10 +140,14 @@
             #linkerhelft{
                 padding: 20;
             }
+            
+            #nieuwsurlinput{
+                width: 300;
+            }
 
         </style>
     </head>
-    <body onload="getNUNLlinks()">
+    <body onload="getNUNLlinks(); getTags();">
         <div id='linkerhelft' style='float:left; width:50%; height:1000px'>
             <div id='linkfield'>
                 <p id='artikellijst'></p> 
@@ -113,16 +159,22 @@
         
         <div style='float:right; width:50%; height:1000px'>
             <br>
-            <button type="button" id="buttongeturl" onclick="getUrl()">Kopieer url</button>
-            <input type="text" id="nieuwsurlinput" name="FirstName" value="https://www.nu.nl/voetbal/4959608/robben-van-beste-spelers-land-ooit-heeft-gehad.html"><br>
-            <button type="button" id="tagbutton" onclick="getTags()">Voeg tags toe</button>
+            Add newsitem:<br>
+            <input type="text" id="nieuwsurlinput" name="FirstName" value=""><br>
+            
             <p id="taglist"></p>
-            <button type="button" id="buttoninput" onclick="versturen()">Toevoegen van nieuwsitem vie POST</button>
+            <button type="button" id="buttoninput" onclick="newNieuwsItem()">Add newsitem</button>
             
-            <button type="button" id="buttonDeleteAll" onclick="deleteAll()">Verwijder alle items</button>
-            
-            <p id="test"></p>
             <hr>
+            Tags: <br>
+            <input type="text" id="newTagInput" name="FirstName" value="">
+            <button type="button" id="buttonNewTag" onclick="newTag()">Add new tag</button><br>
+            <hr>
+            Newsitems on site:<br>
+            
+            
+            <button type="button" id="buttonDeleteAll" onclick="deleteAll()">Delete all newsitems</button>
+            
         </div>
 	</body>
 </html>
