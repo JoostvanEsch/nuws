@@ -3,14 +3,16 @@
     <head>
 	<script>			
             function startrefresh(){
+            	document.getElementById("thumbpane").innerHTML = "";
+            	document.getElementById("loadnews").innerHTML = "";
                 var xhttp = new XMLHttpRequest();
                     xhttp.onreadystatechange = function() {
                         if (this.readyState == 4 && this.status == 200) {
                         document.getElementById("thumbpane").innerHTML = "";
                             var data = JSON.parse(this.responseText);
                             for (i = 0; i < data.length; i++) {
-                            	   var j = parseInt(i);
-                                var textaccumulation = "<a onclick='loadItem("+i+")'><div class=\"thumb\">" + data[j].title  + "</div></a>";
+                            	   var j = parseInt(data[i].id);
+                                var textaccumulation = "<a onclick='loadItem("+j+")'><div class=\"thumb\">" + data[i].title  + "</div></a>";
                                 document.getElementById("thumbpane").innerHTML += textaccumulation;
                             }
                                 
@@ -20,7 +22,7 @@
                 xhttp.setRequestHeader("Content-type", "application/json");
                 xhttp.send();
             }	
-            function loadItem(n){
+            function loadItem(id){
                 var xhttp = new XMLHttpRequest();
                     xhttp.onreadystatechange = function() {
                         if (this.readyState == 4 && this.status == 200) {
@@ -33,8 +35,7 @@
                                 
                         }
                     };
-                 var numb = parseInt(n+1);
-                xhttp.open("GET", "http://localhost:8082/nuws2/"+numb);
+                xhttp.open("GET", "http://localhost:8082/nuws2/"+id);
                 xhttp.setRequestHeader("Content-type", "application/json");
                 xhttp.send();
             }
@@ -175,8 +176,8 @@
         
                 <button type="button" id="buttoninput" onclick="startrefresh()" >Refresh newsitems</button>
         <hr>	
-        <div class="thumbpane" id="thumbpane"></div>
-        <div class="textpane" id="loadnews"></div>
+        <div class="thumbpane" id="thumbpane">Thumbs</div>
+        <div class="textpane" id="loadnews">Start</div>
 
     </body>
 </html>
