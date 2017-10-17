@@ -57,24 +57,6 @@
                 xhttp.setRequestHeader("Content-type", "application/json");
                 xhttp.send();  
              } 
-           
-           
-                function getTagsForAddingNewsitem(){
-                var xhttp = new XMLHttpRequest();
-                console.log("getTagsForAddingNewsitem voor response");
-                    xhttp.onreadystatechange = function() {
-                        if (this.readyState == 4 && this.status == 200) {
-                            console.log("getTagsForAddingNewsitem na response");
-                            var data = JSON.parse(this.responseText);
-                            for (x in data){
-                                console.log(x.id)
-                            }
-                         }
-                    };
-                xhttp.open("GET", "http://localhost:8082/nuwstags");
-                xhttp.setRequestHeader("Content-type", "application/json");
-                xhttp.send();
-            }  
             
             function getTags(){
                 var xhttp = new XMLHttpRequest();
