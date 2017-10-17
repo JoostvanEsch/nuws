@@ -26,12 +26,6 @@ public class NuwsEndpoint {
 	
 	@Autowired
 	NuwsService nuwsservice;
-
-	@GetMapping("/nuws")
-	public String getNuws() {
-		//nuwsservice.test(new NieuwsItem());
-		return "hallo";
-	}
 	
 	@ResponseBody
 	@GetMapping("/nuws2/{id}")
@@ -69,16 +63,6 @@ public class NuwsEndpoint {
 		return NITList;
 	}
 	
-	
-	@GetMapping("/nuws3")
-	public ArrayList<Integer> getNuws3() {
-		ArrayList<Integer> ar = new ArrayList<Integer>();
-		for (int i = 0; i<5; i++) {
-			ar.add(i);
-		}
-		return ar;
-	}
-	
         @GetMapping("/nuwsdelete")
         public void deleteNuws(){
 		System.out.println("endpoint werkt");
@@ -114,7 +98,7 @@ public class NuwsEndpoint {
 	
 
 	@PostMapping("/register")
-	public boolean postRegistration(@RequestBody Gebruiker gebruiker){
+	public String postRegistration(@RequestBody Gebruiker gebruiker){
 		ArrayList<Gebruiker> userList = new ArrayList<Gebruiker>();
 		boolean userNameTaken = false;
 		
@@ -123,12 +107,15 @@ public class NuwsEndpoint {
 			if (g.getNaam().equalsIgnoreCase(gebruiker.getNaam())) userNameTaken = true;
 		}
 		if (userNameTaken == false) {
-		nuwsservice.addToDatabase(gebruiker);
-		return true;
+		return new String("true");
 		} else {
-		System.out.println("username taken");
-		return false;
+		return new String("false");
 		}
+	}
+	
+	@PostMapping("/addRegistration")
+	public void postAddRegistration(@RequestBody Gebruiker gebruiker){
+		nuwsservice.addToDatabase(gebruiker);
 	}
 
 	
