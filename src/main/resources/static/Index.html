@@ -1,18 +1,17 @@
-
 <!DOCTYPE html>
 <html>
     <head>
 	<script>			
-            function test(){
+            function startrefresh(){
                 var xhttp = new XMLHttpRequest();
                     xhttp.onreadystatechange = function() {
                         if (this.readyState == 4 && this.status == 200) {
-                        document.getElementById("outputserver").innerHTML = "";
+                        document.getElementById("thumbpane").innerHTML = "";
                             var data = JSON.parse(this.responseText);
                             for (i = 0; i < data.length; i++) {
                             	   var j = parseInt(i);
                                 var textaccumulation = "<a onclick='loadItem("+i+")'><div class=\"thumb\">" + data[j].title  + "</div></a>";
-                                document.getElementById("outputserver").innerHTML += textaccumulation;
+                                document.getElementById("thumbpane").innerHTML += textaccumulation;
                             }
                                 
                         }
@@ -43,13 +42,10 @@
             function register(){
             		var newUser= document.getElementById("username").value;
                 var newPass= document.getElementById("password").value;
-                var answer;
                 var gebruiker = '{"naam":"'+newUser+'" ,"password":"'+newPass+'"}'; 
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function() {
                     if (this.readyState == 4 && this.status == 200) {
-                    	var answer = JSON.parse(this.responseText);
-                        document.getElementById("outputserver").innerHTML = this.responseText;
                         checkRegistration(this.responseText);
                     }
                 };
@@ -67,17 +63,23 @@
                     xhttp.open("POST", "http://localhost:8082/addRegistration", true);
                     xhttp.setRequestHeader("Content-type", "application/json");
                     xhttp.send(gebruiker);
-                    login();
+                    login(gebruiker);
             		} else {
             			alert("Deze gebruikersnaam is al geregistreerd. \nKies een andere gebruikersnaam.");
             		}
             }
             
-            function login(){
+            function login(gebruiker){
+            	var newUser= document.getElementById("username").value;
+            var newPass= document.getElementById("password").value;
+            var gebruiker = '{"naam":"'+newUser+'" ,"password":"'+newPass+'"}';
+            
         		var lpane = document.getElementById("loginPane");
         		var wpane = document.getElementById("welcomePane");
         		lpane.style.display = 'none';
         		wpane.style.display = 'block';
+        		wpane.innerHTML = "Welkom" + gebruiker;
+        		console.log(gebruiker);
         		
             }
             function logout(){
@@ -129,7 +131,7 @@
 	
 	</style>
     </head>
-    <body onload="test()">
+    <body onload="startrefresh()">
         
 
         <div id="loginPane">
@@ -145,9 +147,9 @@
         </div>
         
         
-                <button type="button" id="buttoninput" onclick="test()" >Refresh newsitems</button>
+                <button type="button" id="buttoninput" onclick="startrefresh()" >Refresh newsitems</button>
         <hr>	
-        <div class="thumbpane" id="outputserver"></div>
+        <div class="thumbpane" id="thumbpane"></div>
         <div class="textpane" id="loadnews"></div>
 
     </body>
