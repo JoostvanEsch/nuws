@@ -117,6 +117,38 @@ public class NuwsEndpoint {
 	public void postAddRegistration(@RequestBody Gebruiker gebruiker){
 		nuwsservice.addToDatabase(gebruiker);
 	}
+	
+	@PostMapping("/login")
+	public String postLogin(@RequestBody Gebruiker gebruiker){
+		ArrayList<Gebruiker> userList = new ArrayList<Gebruiker>();
+		userList = nuwsservice.getUsersFromDatabase();
+		boolean userNameExists = false;
+		long uid = 0;
+		String uPass = "";
+		
+		for (Gebruiker g : userList) {
+			if (g.getNaam().equalsIgnoreCase(gebruiker.getNaam())) {
+				userNameExists = true;
+				uid = g.getId();
+				uPass = g.getPassword();
+			}
+		}
+		
+		if (userNameExists == false) {
+		return new String("Username does not exist");
+		} else {
+			if (gebruiker.getPassword().equals(uPass)) {
+				return new String("Login succes");
+			} else {
+				return new String("Password incorrect");
+			}
+		}
+	}
+	
+	@PostMapping("/checkLogin")
+	public void postCheckLogin(@RequestBody Gebruiker gebruiker){
+		//deze later nog aanvullen
+	}
 
 	
 	

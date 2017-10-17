@@ -70,16 +70,42 @@
             }
             
             function login(gebruiker){
-            	var newUser= document.getElementById("username").value;
-            var newPass= document.getElementById("password").value;
-            var gebruiker = '{"naam":"'+newUser+'" ,"password":"'+newPass+'"}';
+       	     	var newUser= document.getElementById("username").value;
+       		     var newPass= document.getElementById("password").value;
+       	    		 var gebruiker = '{"naam":"'+newUser+'" ,"password":"'+newPass+'"}';
+    		   	     var xhttp = new XMLHttpRequest();
+       		     xhttp.onreadystatechange = function() {
+               if (this.readyState == 4 && this.status == 200) {
+                        checkLogin(this.responseText);
+                    }
+                };
+                xhttp.open("POST", "http://localhost:8082/login", true);
+                xhttp.setRequestHeader("Content-type", "application/json");
+                xhttp.send(gebruiker);
+        		
+        		
+        		
+            }
             
+            function checkLogin(messageFromEndpoint){
+            if (messageFromEndpoint == "Login succes") {
         		var lpane = document.getElementById("loginPane");
         		var wpane = document.getElementById("welcomePane");
         		lpane.style.display = 'none';
         		wpane.style.display = 'block';
-        		wpane.innerHTML = "Welkom" + gebruiker;
-        		console.log(gebruiker);
+        		wpane.innerHTML = "Welkom " + document.getElementById("username").value + "<br>";
+        		wpane.innerHTML += "<input type=\"submit\" value=\"Log-out\" onclick=\"logout()\"><hr>";
+        		
+                //xhttp.open("POST", "http://localhost:8082/checkLogin", true);
+                //xhttp.setRequestHeader("Content-type", "application/json");
+                //xhttp.send(gebruiker);
+            } else if (messageFromEndpoint == "Password incorrect") {
+            		alert("pass inc");
+            } else if (messageFromEndpoint == "Username does not exist") {
+            		alert("user no exist");
+            }
+        		
+        		
         		
             }
             function logout(){
@@ -105,8 +131,9 @@
 		float:right;
 		margin-left:35px;
 		background-color: #eee;
-		overflow:scroll;
+		overflow-y:scroll;
 		margin-top:35px;
+		padding-right:35px;
 	}
 	.thumb {
 		width:120px;
@@ -142,8 +169,7 @@
  			<hr>	
         </div>
         <div id="welcomePane">
-        welkompane <input type="submit" value="Log-out" onclick="logout()">
-        <hr>
+
         </div>
         
         
