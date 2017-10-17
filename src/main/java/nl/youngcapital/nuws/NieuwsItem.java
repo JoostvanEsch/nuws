@@ -13,7 +13,7 @@ public class NieuwsItem {
     @GeneratedValue
     private Long id;
     private String url;
-    private String[] tags;
+    private String tags;
     @ManyToOne
     private Admin admin;
     
@@ -29,7 +29,7 @@ public class NieuwsItem {
         this.url = url;
     }
 
-    public NieuwsItem(Long id, String url, String[] tags, Admin admin) throws IOException {
+    public NieuwsItem(Long id, String url, String tags, Admin admin) throws IOException {
         this.id = id;
         this.url = url;
         this.tags = tags;
@@ -78,11 +78,11 @@ public class NieuwsItem {
         this.url = url;
     }
 
-    public String[] getTags() {
+    public String getTags() {
         return tags;
     }
 
-    public void setTags(String[] tags) {
+    public void setTags(String tags) {
         this.tags = tags;
     }
 
