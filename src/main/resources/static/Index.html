@@ -1,18 +1,19 @@
-
 <!DOCTYPE html>
 <html>
     <head>
 	<script>			
-            function test(){
+            function startrefresh(){
+            	document.getElementById("thumbpane").innerHTML = "";
+            	document.getElementById("loadnews").innerHTML = "";
                 var xhttp = new XMLHttpRequest();
                     xhttp.onreadystatechange = function() {
                         if (this.readyState == 4 && this.status == 200) {
-                        document.getElementById("outputserver").innerHTML = "";
+                        document.getElementById("thumbpane").innerHTML = "";
                             var data = JSON.parse(this.responseText);
                             for (i = 0; i < data.length; i++) {
-                            	   var j = parseInt(i);
-                                var textaccumulation = "<a onclick='loadItem("+i+")'><div class=\"thumb\">" + data[j].title  + "</div></a>";
-                                document.getElementById("outputserver").innerHTML += textaccumulation;
+                            	   var j = parseInt(data[i].id);
+                                var textaccumulation = "<a onclick='loadItem("+j+")'><div class=\"thumb\">" + data[i].title  + "</div></a>";
+                                document.getElementById("thumbpane").innerHTML += textaccumulation;
                             }
                                 
                         }
@@ -21,7 +22,7 @@
                 xhttp.setRequestHeader("Content-type", "application/json");
                 xhttp.send();
             }	
-            function loadItem(n){
+            function loadItem(id){
                 var xhttp = new XMLHttpRequest();
                     xhttp.onreadystatechange = function() {
                         if (this.readyState == 4 && this.status == 200) {
@@ -34,8 +35,7 @@
                                 
                         }
                     };
-                 var numb = parseInt(n+1);
-                xhttp.open("GET", "http://localhost:8082/nuws2/"+numb);
+                xhttp.open("GET", "http://localhost:8082/nuws2/"+id);
                 xhttp.setRequestHeader("Content-type", "application/json");
                 xhttp.send();
             }
@@ -43,13 +43,10 @@
             function register(){
             		var newUser= document.getElementById("username").value;
                 var newPass= document.getElementById("password").value;
-                var answer;
                 var gebruiker = '{"naam":"'+newUser+'" ,"password":"'+newPass+'"}'; 
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function() {
                     if (this.readyState == 4 && this.status == 200) {
-                    	var answer = JSON.parse(this.responseText);
-                        document.getElementById("outputserver").innerHTML = this.responseText;
                         checkRegistration(this.responseText);
                     }
                 };
@@ -67,17 +64,49 @@
                     xhttp.open("POST", "http://localhost:8082/addRegistration", true);
                     xhttp.setRequestHeader("Content-type", "application/json");
                     xhttp.send(gebruiker);
-                    login();
+                    login(gebruiker);
             		} else {
             			alert("Deze gebruikersnaam is al geregistreerd. \nKies een andere gebruikersnaam.");
             		}
             }
             
-            function login(){
+            function login(gebruiker){
+       	     	var newUser= document.getElementById("username").value;
+       		     var newPass= document.getElementById("password").value;
+       	    		 var gebruiker = '{"naam":"'+newUser+'" ,"password":"'+newPass+'"}';
+    		   	     var xhttp = new XMLHttpRequest();
+       		     xhttp.onreadystatechange = function() {
+               if (this.readyState == 4 && this.status == 200) {
+                        checkLogin(this.responseText);
+                    }
+                };
+                xhttp.open("POST", "http://localhost:8082/login", true);
+                xhttp.setRequestHeader("Content-type", "application/json");
+                xhttp.send(gebruiker);
+        		
+        		
+        		
+            }
+            
+            function checkLogin(messageFromEndpoint){
+            if (messageFromEndpoint == "Login succes") {
         		var lpane = document.getElementById("loginPane");
         		var wpane = document.getElementById("welcomePane");
         		lpane.style.display = 'none';
         		wpane.style.display = 'block';
+        		wpane.innerHTML = "Welkom " + document.getElementById("username").value + "<br>";
+        		wpane.innerHTML += "<input type=\"submit\" value=\"Log-out\" onclick=\"logout()\"><hr>";
+        		
+                //xhttp.open("POST", "http://localhost:8082/checkLogin", true);
+                //xhttp.setRequestHeader("Content-type", "application/json");
+                //xhttp.send(gebruiker);
+            } else if (messageFromEndpoint == "Password incorrect") {
+            		alert("pass inc");
+            } else if (messageFromEndpoint == "Username does not exist") {
+            		alert("user no exist");
+            }
+        		
+        		
         		
             }
             function logout(){
@@ -103,8 +132,9 @@
 		float:right;
 		margin-left:35px;
 		background-color: #eee;
-		overflow:scroll;
+		overflow-y:scroll;
 		margin-top:35px;
+		padding-right:35px;
 	}
 	.thumb {
 		width:120px;
@@ -129,7 +159,7 @@
 	
 	</style>
     </head>
-    <body onload="test()">
+    <body onload="startrefresh()">
         
 
         <div id="loginPane">
@@ -140,15 +170,14 @@
  			<hr>	
         </div>
         <div id="welcomePane">
-        welkompane <input type="submit" value="Log-out" onclick="logout()">
-        <hr>
+
         </div>
         
         
-                <button type="button" id="buttoninput" onclick="test()" >Refresh newsitems</button>
+                <button type="button" id="buttoninput" onclick="startrefresh()" >Refresh newsitems</button>
         <hr>	
-        <div class="thumbpane" id="outputserver"></div>
-        <div class="textpane" id="loadnews"></div>
+        <div class="thumbpane" id="thumbpane">Thumbs</div>
+        <div class="textpane" id="loadnews">Start</div>
 
     </body>
 </html>
