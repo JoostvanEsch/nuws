@@ -81,14 +81,19 @@ public class NuwsEndpoint {
         @ResponseBody
 	@GetMapping("/nuwstags")
 	public List<Tag> getTags() throws IOException{
-		System.out.println("EndPoint wordt geactiveerd");
 		List<Tag> TagList = nuwsservice.getTagsFromDatabase();
 		return TagList;
 	}
         
 	@PostMapping("/nuwspost")
 	public void postEntiteit(@RequestBody NieuwsItem nieuwsitem) throws IOException{
+                System.out.println("EndPoint wordt geactiveerd");
 		nuwsservice.addToDatabase(nieuwsitem);
+	}
+        
+        @PostMapping("/newtag")
+	public void postNewTag(@RequestBody Tag tag) throws IOException{
+		nuwsservice.addTagToDatabase(tag);
 	}
 	
 
