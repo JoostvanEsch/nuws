@@ -43,23 +43,42 @@
             function register(){
             		var newUser= document.getElementById("username").value;
                 var newPass= document.getElementById("password").value;
+                var answer;
                 var gebruiker = '{"naam":"'+newUser+'" ,"password":"'+newPass+'"}'; 
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function() {
-                    if (this.readyState == 4 && this.status == 202) {
+                    if (this.readyState == 4 && this.status == 200) {
+                    	var answer = JSON.parse(this.responseText);
                         document.getElementById("outputserver").innerHTML = this.responseText;
+                        checkRegistration(this.responseText);
                     }
                 };
                 xhttp.open("POST", "http://localhost:8082/register", true);
                 xhttp.setRequestHeader("Content-type", "application/json");
                 xhttp.send(gebruiker);
-                console.log(this.responseText);
             }
+            
+            function checkRegistration(a){
+            		if (a == "true" ) {
+            			var newUser= document.getElementById("username").value;
+                    var newPass= document.getElementById("password").value;
+                    var gebruiker = '{"naam":"'+newUser+'" ,"password":"'+newPass+'"}'; 
+                    var xhttp = new XMLHttpRequest();
+                    xhttp.open("POST", "http://localhost:8082/addRegistration", true);
+                    xhttp.setRequestHeader("Content-type", "application/json");
+                    xhttp.send(gebruiker);
+                    login();
+            		} else {
+            			alert("Deze gebruikersnaam is al geregistreerd. \nKies een andere gebruikersnaam.");
+            		}
+            }
+            
             function login(){
         		var lpane = document.getElementById("loginPane");
         		var wpane = document.getElementById("welcomePane");
         		lpane.style.display = 'none';
         		wpane.style.display = 'block';
+        		
             }
             function logout(){
             	var lpane = document.getElementById("loginPane");
