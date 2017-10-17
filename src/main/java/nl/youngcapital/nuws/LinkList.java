@@ -36,13 +36,14 @@ public class LinkList {
         while ((line = br.readLine()) != null) {
         	if (line.contains(startText)) {startMarker++;}
         	if (line.contains(stopText)) {stopMarker++;}
-        	if (startMarker == 1 && stopMarker == 0 && line.contains("<a href") && line.contains(".html") && !(line.contains("/video")) && !(line.contains("/advertorial")) && !(line.contains("/nushop"))) {
+        	if (startMarker == 1 && stopMarker == 0 && line.contains("<a href") && line.contains(".html") && !(line.contains("/video")) && !(line.contains("/livestream")) && !(line.contains("/advertorial")) && !(line.contains("/nushop"))) {
         		relevantCode.add("https://www.nu.nl" + line.substring(line.indexOf("/"), (line.indexOf(".html")+5)));
                         
-            //System.out.println(line);
+             
         	}
         }
-        
+        System.out.println("relevant code testline");
+        System.out.println(relevantCode.get(10));
         for (String s : relevantCode) {
         		if (true) {
         			Scraper sc = new Scraper(s);
