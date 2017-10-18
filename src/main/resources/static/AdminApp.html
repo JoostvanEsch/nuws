@@ -3,7 +3,7 @@
 <html>
     <head>
         <script>
-            var tagCount = 0;
+             var tagCount = 0;
             
             function convertTagListToString(){
                 var tagstring = "";
@@ -17,6 +17,32 @@
                 console.log(tagstring);
                 return tagstring;
             }
+            
+            function getNewsItemList(){
+                var xhttp = new XMLHttpRequest();
+                    xhttp.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                            document.getElementById("newsItemInDatabaseList").innerHTML = "";
+                            var data = JSON.parse(this.responseText);
+                            for (i = 0; i < data.length; i++){
+                                    var titelvak =  document.createElement("div");
+                                    titelvak.innerHTML = "<b>"+data[i].title+"</b>";
+                                    var tagvak =  document.createElement("div");
+                                    tagvak.innerHTML = "<i>Tags: "+data[i].tags+"</i>";
+                                    var htmlbreak =  document.createElement("br");
+                                    document.getElementById("newsItemInDatabaseList").appendChild(titelvak);
+                                    document.getElementById("newsItemInDatabaseList").appendChild(htmlbreak);
+                                    document.getElementById("newsItemInDatabaseList").appendChild(tagvak);
+                                    document.getElementById("newsItemInDatabaseList").appendChild(htmlbreak);
+                               }
+                                
+                        }
+                    };
+                xhttp.open("GET", "http://localhost:8082/nuwstitles");
+                xhttp.setRequestHeader("Content-type", "application/json");
+                xhttp.send();
+            }
+            
             function newNieuwsItem(){
                 var newUrl= document.getElementById("nieuwsurlinput").value;
                 var newTags = convertTagListToString();
@@ -24,8 +50,8 @@
                 console.log(nieuwsitem);
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function() {
-                    if (this.readyState == 4 && this.status == 202) {
-                        document.getElementById("outputserver").innerHTML = this.responseText;
+                    if (this.readyState == 4 && this.status == 200) {
+                        getNewsItemList();
                     }
                 };
                 xhttp.open("POST", "http://localhost:8082/nuwspost", true);
@@ -62,17 +88,15 @@
                 var xhttp = new XMLHttpRequest();
                     xhttp.onreadystatechange = function() {
                         if (this.readyState == 4 && this.status == 200) {
-                        document.getElementById("taglist").innerHTML = ""; 
+                            document.getElementById("taglist").innerHTML = ""; 
                             tagCount = 0;
                             var data = JSON.parse(this.responseText);
                             for (i = 0; i < data.length; i++) {
                                 tagCount++;
                             	var j = parseInt(i);
                                 var textaccumulation = "<label class=container><input id='tag"+tagCount+"' name='"+data[j].tag+"' type='checkbox'>"+data[j].tag+"<span class='checkmark'></span></label><br>"
-                                document.getElementById("taglist").innerHTML += textaccumulation;
-                                
-                            }
-                                
+                                document.getElementById("taglist").innerHTML += textaccumulation;  
+                            }     
                         }
                     };
                 xhttp.open("GET", "http://localhost:8082/nuwstags");
@@ -85,7 +109,7 @@
                var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function() {
                     if (this.readyState == 4 && this.status == 200) {
-                       console.log(this.responseText);
+                       getNewsItemList();
                     }
                 };
                 xhttp.open("GET", "http://localhost:8082/nuwsdelete", true);
@@ -139,7 +163,7 @@
 
         </style>
     </head>
-    <body onload="getNUNLlinks(); getTags();">
+    <body onload="getNUNLlinks(); getTags(); getNewsItemList()">
         <div id='linkerhelft' style='float:left; width:50%; height:1000px'>
             <div id='linkfield'>
                 <p id='artikellijst'></p> 
@@ -164,7 +188,7 @@
             <hr>
             Newsitems on site:<br>
             
-            
+            <p id="newsItemInDatabaseList"></p>
             <button type="button" id="buttonDeleteAll" onclick="deleteAll()">Delete all newsitems</button>
             
         </div>

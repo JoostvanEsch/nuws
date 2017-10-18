@@ -44,14 +44,15 @@ public class Scraper {
         String startString = "title-container";
         ArrayList<String> titleAr = new ArrayList<String>();
         
-
+       //System.out.println("printen start");
+        
         while ((line = br.readLine()) != null) {
         	if (line.toLowerCase().contains(startString.toLowerCase())) {
         		start = 1;
         	}
         	if (start == 1) {
         		titleAr.add(line);
-            //System.out.println(line);
+                        //System.out.println(line);
             if (line.toLowerCase().contains("</div>")) {
             		closeDivCount++;
             }
@@ -60,7 +61,17 @@ public class Scraper {
             }
         	}
         }
-        return titleAr.get(3).trim();
+        
+        
+        //System.out.println("printen eind");
+       
+        if (titleAr.size() > 0 ){
+            return titleAr.get(3).trim();
+        }
+        else{
+            return "(deze link heeft geen geldige titel)";
+        }
+        
     }
     
     public String scrapeSubTitle(URL url) throws IOException{
