@@ -22,6 +22,7 @@
                 var xhttp = new XMLHttpRequest();
                     xhttp.onreadystatechange = function() {
                         if (this.readyState == 4 && this.status == 200) {
+                            document.getElementById("newsItemInDatabaseList").innerHTML = "";
                             var data = JSON.parse(this.responseText);
                             for (i = 0; i < data.length; i++){
                                     var titelvak =  document.createElement("div");
@@ -49,8 +50,8 @@
                 console.log(nieuwsitem);
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function() {
-                    if (this.readyState == 4 && this.status == 202) {
-                        document.getElementById("outputserver").innerHTML = this.responseText;
+                    if (this.readyState == 4 && this.status == 200) {
+                        getNewsItemList();
                     }
                 };
                 xhttp.open("POST", "http://localhost:8082/nuwspost", true);
@@ -87,17 +88,15 @@
                 var xhttp = new XMLHttpRequest();
                     xhttp.onreadystatechange = function() {
                         if (this.readyState == 4 && this.status == 200) {
-                        document.getElementById("taglist").innerHTML = ""; 
+                            document.getElementById("taglist").innerHTML = ""; 
                             tagCount = 0;
                             var data = JSON.parse(this.responseText);
                             for (i = 0; i < data.length; i++) {
                                 tagCount++;
                             	var j = parseInt(i);
                                 var textaccumulation = "<label class=container><input id='tag"+tagCount+"' name='"+data[j].tag+"' type='checkbox'>"+data[j].tag+"<span class='checkmark'></span></label><br>"
-                                document.getElementById("taglist").innerHTML += textaccumulation;
-                                
-                            }
-                                
+                                document.getElementById("taglist").innerHTML += textaccumulation;  
+                            }     
                         }
                     };
                 xhttp.open("GET", "http://localhost:8082/nuwstags");
@@ -110,7 +109,7 @@
                var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function() {
                     if (this.readyState == 4 && this.status == 200) {
-                       console.log(this.responseText);
+                       getNewsItemList();
                     }
                 };
                 xhttp.open("GET", "http://localhost:8082/nuwsdelete", true);

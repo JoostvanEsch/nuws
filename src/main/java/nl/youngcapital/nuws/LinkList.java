@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LinkList {
-    private static List<String> nunllijst = new ArrayList<>();
+    private static List<String> nunllist = new ArrayList<>();
 
     public LinkList() {
     }
@@ -47,16 +47,16 @@ public class LinkList {
         for (String s : relevantCode) {
         		if (true) {
         			Scraper sc = new Scraper(s);
-        			nunllijst.add("<a href=\"" + s + "\" target=\"nunl_iframe\">" + sc.scrapeTitle(new URL(s)) +"</a>");
+        			nunllist.add("<a href=\"" + s + "\" target=\"nunl_iframe\">" + sc.scrapeTitle(new URL(s)) +"</a>");
         		}
         }
-        System.out.println(nunllijst.get(0));
+        System.out.println(nunllist.get(0));
         
         
     }
 
-    public static List<String> getNunllijst() {
-        return nunllijst;
+    public static List<String> getNunlList() {
+        return nunllist;
     }
  
 }
