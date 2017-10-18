@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html>
     <head>
-	<script>			
+	<script>	
+			
+			var domain = "http://localhost:8082";
+			
             function startrefresh(){
             	document.getElementById("thumbpane").innerHTML = "";
             	document.getElementById("loadnews").innerHTML = "";
@@ -19,7 +22,9 @@
                                 
                         }
                     };
-                xhttp.open("GET", "http://localhost:8082/nuwstitles");
+                    console.log(domain);
+                    console.log(domain + "/nuwstitles");
+                xhttp.open("GET", (domain + "/nuwstitles"));
                 xhttp.setRequestHeader("Content-type", "application/json");
                 xhttp.send();
             }	
@@ -40,13 +45,13 @@
                         document.getElementById("loadnews").innerHTML = "";
                             var nieuwsitem = JSON.parse(this.responseText);
                             
-                                var textaccumulation = nieuwsitem.title  + "<br><br>" + nieuwsitem.sub + "<br><br>" + nieuwsitem.bodytext;
+                                var textaccumulation = "<h1>" + nieuwsitem.title + "</h1>"  + "<br><br>" + nieuwsitem.sub + "<br><br>" + nieuwsitem.bodytext;
                                 document.getElementById("loadnews").innerHTML += textaccumulation;
                             
                                 
                         }
                     };
-                xhttp.open("GET", "http://localhost:8082/nuws2/"+id);
+                xhttp.open("GET", domain + "/nuws2/"+id);
                 xhttp.setRequestHeader("Content-type", "application/json");
                 xhttp.send();
             }
@@ -61,7 +66,7 @@
                         checkRegistration(this.responseText);
                     }
                 };
-                xhttp.open("POST", "http://localhost:8082/register", true);
+                xhttp.open("POST", domain + "/register", true);
                 xhttp.setRequestHeader("Content-type", "application/json");
                 xhttp.send(gebruiker);
             }
@@ -72,7 +77,7 @@
                     var newPass= document.getElementById("password").value;
                     var gebruiker = '{"naam":"'+newUser+'" ,"password":"'+newPass+'"}'; 
                     var xhttp = new XMLHttpRequest();
-                    xhttp.open("POST", "http://localhost:8082/addRegistration", true);
+                    xhttp.open("POST", domain + "/addRegistration", true);
                     xhttp.setRequestHeader("Content-type", "application/json");
                     xhttp.send(gebruiker);
                     login(gebruiker);
@@ -91,7 +96,7 @@
                         checkLogin(this.responseText);
                     }
                 };
-                xhttp.open("POST", "http://localhost:8082/login", true);
+                xhttp.open("POST", domain + "/login", true);
                 xhttp.setRequestHeader("Content-type", "application/json");
                 xhttp.send(gebruiker);
         		
@@ -140,11 +145,11 @@
 	.textpane {
 		width:45%;
 		height:500px;
-		float:right;
-		margin-left:35px;
 		background-color: #eee;
 		overflow-y:scroll;
 		margin-top:35px;
+		margin-right:35px;
+		padding-left:35px;
 		padding-right:35px;
 	}
 	.thumb {
