@@ -18,6 +18,7 @@ import nl.youngcapital.nuws.Gebruiker;
 import nl.youngcapital.nuws.NieuwsItem;
 import nl.youngcapital.nuws.Scraper;
 import nl.youngcapital.nuws.Tag;
+import nl.youngcapital.nuws.Admin;
 import nl.youngcapital.nuws.service.NuwsService;
 import nl.youngcapital.nuws.LinkList;
 import nl.youngcapital.nuws.Review;
@@ -67,9 +68,16 @@ public class NuwsEndpoint {
 	
         @GetMapping("/nuwsdelete")
         public String deleteNuws(){
-		System.out.println("endpoint werkt");
                 nuwsservice.deleteAllDatabase();
                 return "";
+        }
+        
+        @ResponseBody
+        @GetMapping("/adminlogin")
+        public List<Admin> getAdmins(){
+		System.out.println(" admin endpoint werkt");
+                List<Admin> adminList = nuwsservice.getAdminsFromDatabase();
+                return adminList;
         }
         
         @DeleteMapping("/deleteone/{id}")

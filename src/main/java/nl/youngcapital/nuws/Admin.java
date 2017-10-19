@@ -13,14 +13,24 @@ public class Admin {
     private Long id;
     private String naam;
     private String password;
+    private Long admintype;
 
     public Admin() {
     }
 
-    public Admin(Long id, String naam, String password) {
+    public Admin(Long id, String naam, String password, Long admintype) {
         this.id = id;
         this.naam = naam;
         this.password = password;
+        this.admintype = admintype;
+    }
+
+    public Long getAdmintype() {
+        return admintype;
+    }
+
+    public void setAdmintype(Long admintype) {
+        this.admintype = admintype;
     }
 
     public Long getId() {

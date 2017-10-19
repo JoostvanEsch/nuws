@@ -11,21 +11,26 @@ import org.springframework.transaction.annotation.Transactional;
 import nl.youngcapital.nuws.Gebruiker;
 import nl.youngcapital.nuws.NieuwsItem;
 import nl.youngcapital.nuws.Tag;
+import nl.youngcapital.nuws.Admin;
 import nl.youngcapital.nuws.Review;
+
 
 
 @Service
 @Transactional
 public class NuwsService {
 	
-	@Autowired
-	NuwsRepository nuwsrepository;
+    @Autowired
+    NuwsRepository nuwsrepository;
         
     @Autowired
-	TagRepository tagrepository;
+    TagRepository tagrepository;
         
     @Autowired
     GebruikerRepository gebruikerrepository;
+    
+    @Autowired
+    AdminRepository adminrepository;
     
     @Autowired
     ReviewRepository reviewrepository;
@@ -34,6 +39,7 @@ public class NuwsService {
 		reviewrepository.save(review);
 		//return nieuwsitem;
 	}
+
 
 	public void addToDatabase(NieuwsItem nieuwsitem) {
 		 System.out.println("service werkt");
@@ -72,6 +78,11 @@ public class NuwsService {
         public List<Tag> getTagsFromDatabase() {
                
 		return (List<Tag>) tagrepository.findAll();
+	}
+        
+         public List<Admin> getAdminsFromDatabase() {
+                System.out.println("AdminService werkt");
+		return (List<Admin>)adminrepository.findAll();
 	}
         
         public void deleteAllDatabase() {

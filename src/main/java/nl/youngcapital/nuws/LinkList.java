@@ -42,15 +42,14 @@ public class LinkList {
              
         	}
         }
-        System.out.println("relevant code testline");
-        System.out.println(relevantCode.get(10));
+        
         for (String s : relevantCode) {
         		if (true) {
         			Scraper sc = new Scraper(s);
         			nunllist.add("<a href=\"" + s + "\" target=\"nunl_iframe\">" + sc.scrapeTitle(new URL(s)) +"</a>");
         		}
         }
-        System.out.println(nunllist.get(0));
+        
         
         
     }
