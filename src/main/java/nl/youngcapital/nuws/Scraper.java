@@ -137,7 +137,9 @@ public class Scraper {
         while (bodySB.indexOf("<p>") >= 0 || bodySB.indexOf("<a id=\"anchor") >= 0) {
         	
         	if ((bodySB.indexOf("<p>") < bodySB.indexOf("<a id=\"anchor")) || ((bodySB.indexOf("<a id=\"anchor") == -1) && (bodySB.indexOf("<p>") !=-1 ))) {
-        bodyTxt.append(bodySB.substring(bodySB.indexOf("<p>"), (bodySB.indexOf("</p>") + 4)));
+            if (bodySB.indexOf("<p>", bodySB.indexOf("<p>" + 3)) < bodySB.indexOf("</p>")) {
+            		bodyTxt.append(bodySB.substring(bodySB.indexOf("<p>"), (bodySB.indexOf("</p>") + 4)));
+            }
         bodySB.delete(0 , (bodySB.indexOf("</p>") + 4));
         	} else if (bodySB.indexOf("<a id=\"anchor") < bodySB.indexOf("<p>") && bodySB.indexOf("<a id=\"anchor") != -1) {
         bodyTxt.append(bodySB.substring(bodySB.indexOf("<a id=\"anchor"), (bodySB.indexOf("</h3>") + 5)));
