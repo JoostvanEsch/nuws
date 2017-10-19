@@ -91,7 +91,7 @@ public class Scraper {
         	}
         	if (start == 1) {
         		subTitleAr.add(line);
-            //System.out.println(line);
+            
             if (line.toLowerCase().contains("</div>")) {
             		closeDivCount++;
             }
@@ -124,7 +124,7 @@ public class Scraper {
         	if (start == 1 && line.toLowerCase().contains("<p>".toLowerCase())) {start = 2;}
         	if (start == 2) {
         		bodyAr.add(line);
-            //System.out.println(line);
+            
             if (line.toLowerCase().contains(stopString.toLowerCase())) {
             	break BodyLoop;
             }
