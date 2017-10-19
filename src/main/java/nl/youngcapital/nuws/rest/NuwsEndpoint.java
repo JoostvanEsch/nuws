@@ -20,6 +20,7 @@ import nl.youngcapital.nuws.Scraper;
 import nl.youngcapital.nuws.Tag;
 import nl.youngcapital.nuws.service.NuwsService;
 import nl.youngcapital.nuws.LinkList;
+import nl.youngcapital.nuws.Review;
 
 
 @RestController
@@ -156,7 +157,7 @@ public class NuwsEndpoint {
 		return new String("Username does not exist");
 		} else {
 			if (gebruiker.getPassword().equals(uPass)) {
-				return new String("Login succes");
+				return new String(""+uid);
 			} else {
 				return new String("Password incorrect");
 			}
@@ -166,5 +167,19 @@ public class NuwsEndpoint {
 	@PostMapping("/checkLogin")
 	public void postCheckLogin(@RequestBody Gebruiker gebruiker){
 		//deze later nog aanvullen
+	}
+	
+	@PostMapping("/addReview")
+	public void postAddReview(@RequestBody Review review){
+		System.out.println("werkt");
+		review.setNieuwsitem(review.getNieuwsitem());
+		nuwsservice.addToDatabase(review);
+	}
+	
+	@ResponseBody
+	@GetMapping("/gebruiker/{id}")
+	public Gebruiker getGebruiker(@PathVariable long id){
+		Gebruiker n = nuwsservice.getUserFromDatabase(id);
+		return n;
 	}
 }
