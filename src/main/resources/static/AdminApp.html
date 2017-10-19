@@ -3,21 +3,25 @@
 <html>
     <head>
         <script>
+            var tagCount = 0;
             
             function convertTagListToString(){
-                var taglist = getTagsForAddingNewsitem();
-                var tagstring = ""
-                console.log("convertTagListToString");
-                for (x in taglist){
-                    console.log(x);
-                } 
+                var tagstring = "";
+                for (i = 1; i <= tagCount; i++){
+                    var tagid = "tag"+i;
+                    var taglabelid = "taglabel"+i;
+                    if (document.getElementById(tagid).checked){
+                        tagstring = tagstring.concat(document.getElementById(tagid).name+" ");
+                    }
+                }
+                console.log(tagstring);
+                return tagstring;
             }
             function newNieuwsItem(){
-                //convertTagListToString()
                 var newUrl= document.getElementById("nieuwsurlinput").value;
-                var newTags = "test tag";
-                var nieuwsitem = '{"url":"'+newUrl+'"}'; 
-                //console.log(nieuwsitem);
+                var newTags = convertTagListToString();
+                var nieuwsitem = '{"tags":"'+newTags+'" ,"url":"'+newUrl+'"}'; 
+                console.log(nieuwsitem);
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function() {
                     if (this.readyState == 4 && this.status == 202) {
@@ -30,7 +34,6 @@
             }
              
             function kopieerURL(value){
-                console.log("kopieerURL werkt");
                 document.getElementById("nieuwsurlinput").value = value;
             }
             
@@ -54,31 +57,20 @@
                 xhttp.setRequestHeader("Content-type", "application/json");
                 xhttp.send();  
              } 
-           
-           
-                function getTagsForAddingNewsitem(){
-                var xhttp = new XMLHttpRequest();
-                    xhttp.onreadystatechange = function() {
-                        if (this.readyState == 4 && this.status == 200) {
-                            var data = JSON.parse(this.responseText);
-                            return data;
-                         }
-                    };
-                xhttp.open("GET", "http://localhost:8082/nuwstags");
-                xhttp.setRequestHeader("Content-type", "application/json");
-                xhttp.send();
-            }  
             
             function getTags(){
                 var xhttp = new XMLHttpRequest();
                     xhttp.onreadystatechange = function() {
                         if (this.readyState == 4 && this.status == 200) {
-                        document.getElementById("taglist").innerHTML = "";
+                        document.getElementById("taglist").innerHTML = ""; 
+                            tagCount = 0;
                             var data = JSON.parse(this.responseText);
                             for (i = 0; i < data.length; i++) {
+                                tagCount++;
                             	var j = parseInt(i);
-                                var textaccumulation = "<label class=container><input id='"+data[j].id+"' type='checkbox'>"+data[j].tag+"<span class='checkmark'></span></label><br>"
+                                var textaccumulation = "<label class=container><input id='tag"+tagCount+"' name='"+data[j].tag+"' type='checkbox'>"+data[j].tag+"<span class='checkmark'></span></label><br>"
                                 document.getElementById("taglist").innerHTML += textaccumulation;
+                                
                             }
                                 
                         }

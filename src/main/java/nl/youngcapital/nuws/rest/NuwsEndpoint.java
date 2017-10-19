@@ -120,6 +120,7 @@ public class NuwsEndpoint {
 	
 	@PostMapping("/login")
 	public String postLogin(@RequestBody Gebruiker gebruiker){
+		
 		ArrayList<Gebruiker> userList = new ArrayList<Gebruiker>();
 		userList = nuwsservice.getUsersFromDatabase();
 		boolean userNameExists = false;
