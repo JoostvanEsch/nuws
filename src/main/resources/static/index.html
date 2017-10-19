@@ -4,6 +4,8 @@
 	<script>	
 			
 			var domain = "http://localhost:8082";
+			var currentUser = {id:"100",naam:"test",password:"testww"}
+			var currentNieuwsItem;
 			
             function startrefresh(){
             	document.getElementById("thumbpane").innerHTML = "";
@@ -44,7 +46,8 @@
                         if (this.readyState == 4 && this.status == 200) {
                         document.getElementById("loadnews").innerHTML = "";
                             var nieuwsitem = JSON.parse(this.responseText);
-                            
+                            currentNieuwsItem = this.responseText;
+                            console.log(currentNieuwsItem);
                                 var textaccumulation = "<h1>" + nieuwsitem.title + "</h1>"  + "<br><br>" + nieuwsitem.sub + "<br><br>" + nieuwsitem.bodytext;
                                 document.getElementById("loadnews").innerHTML += textaccumulation;
                             
@@ -99,37 +102,64 @@
                 xhttp.open("POST", domain + "/login", true);
                 xhttp.setRequestHeader("Content-type", "application/json");
                 xhttp.send(gebruiker);
-        		
-        		
-        		
             }
             
             function checkLogin(messageFromEndpoint){
-            if (messageFromEndpoint == "Login succes") {
+            	if (messageFromEndpoint == "Password incorrect") {
+            		alert("pass inc");
+            	} else if (messageFromEndpoint == "Username does not exist") {
+            		alert("user no exist");
+            } else {
+            	setCurrentUser(messageFromEndpoint);
         		var lpane = document.getElementById("loginPane");
         		var wpane = document.getElementById("welcomePane");
+        		var rpane = document.getElementById("reviewpane");
         		lpane.style.display = 'none';
         		wpane.style.display = 'block';
-        		wpane.innerHTML = "Welkom " + document.getElementById("username").value + "<br>";
-        		wpane.innerHTML += "<input type=\"submit\" value=\"Log-out\" onclick=\"logout()\"><hr>";
+        		rpane.style.display = 'block';
+        		wpane.innerHTML = "<input type=\"submit\" value=\"Log-out\" onclick=\"logout()\">";
+        		wpane.innerHTML += "Welkom TestUser <br><hr>";
+            }
+            }
+            
         		
-                //xhttp.open("POST", "http://localhost:8082/checkLogin", true);
-                //xhttp.setRequestHeader("Content-type", "application/json");
-                //xhttp.send(gebruiker);
-            } else if (messageFromEndpoint == "Password incorrect") {
-            		alert("pass inc");
-            } else if (messageFromEndpoint == "Username does not exist") {
-            		alert("user no exist");
+            function setCurrentUser(id){
+                var xhttp = new XMLHttpRequest();
+                    xhttp.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                            currentUser = this.responseText;
+                            console.log("Current User = " + currentUser);
+                        }
+                    };
+                xhttp.open("GET", domain + "/gebruiker/"+id);
+                xhttp.setRequestHeader("Content-type", "application/json");
+                xhttp.send();
             }
         		
-        		
-        		
-            }
+            
             function logout(){
             	var lpane = document.getElementById("loginPane");
         		var wpane = document.getElementById("welcomePane");
+        		var rpane = document.getElementById("reviewpane");
         		lpane.style.display = 'block';
         		wpane.style.display = 'none';
+        		rpane.style.display = 'none';
+        		currentUser = "";
+            }
+            
+            function addReview(){
+        		var newReviewContent = document.getElementById("reviewcontent").value;
+            var review = '{"tekst":"'+newReviewContent+'","nieuwsitem":'+currentNieuwsItem+',"gebruiker":'+currentUser+'}';
+            console.log("DIT IS EEN TEST\n"+review);
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        //checkRegistration(this.responseText);
+                    }
+                };
+                xhttp.open("POST", domain + "/addReview", true);
+                xhttp.setRequestHeader("Content-type", "application/json");
+                xhttp.send(review);
             }
             
             
@@ -172,6 +202,12 @@
 	#welcomePane{
 	display:none;
 	}
+	#reviewpane{
+	display:none;
+	padding-top:35px;
+	}
+
+	
 	
 	
 	</style>
@@ -194,7 +230,29 @@
                 <button type="button" id="buttoninput" onclick="startrefresh()" >Refresh newsitems</button>
         <hr>	
         <div class="thumbpane" id="thumbpane">Thumbs</div>
-        <div class="textpane" id="loadnews">Start</div>
+        <div class="textpane" >
+        <div id="reviewpane">
+        <textarea id="reviewcontent" style="width:80%" rows="5" name="reviewcontent" form="reviewform">Enter comment...</textarea><br>
+        <form id="reviewform">
+        <input type="button" value="Submit" onclick="addReview()">
+        </form>
+        </div>
+        <div id="loadnews">
+        
+        </div>
+        </div>
 
     </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
