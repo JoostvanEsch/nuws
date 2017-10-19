@@ -12,6 +12,8 @@ import nl.youngcapital.nuws.Gebruiker;
 import nl.youngcapital.nuws.NieuwsItem;
 import nl.youngcapital.nuws.Tag;
 import nl.youngcapital.nuws.Admin;
+import nl.youngcapital.nuws.Review;
+
 
 
 @Service
@@ -29,6 +31,15 @@ public class NuwsService {
     
     @Autowired
     AdminRepository adminrepository;
+    
+    @Autowired
+    ReviewRepository reviewrepository;
+    
+	public void addToDatabase(Review review) {
+		reviewrepository.save(review);
+		//return nieuwsitem;
+	}
+
 
 	public void addToDatabase(NieuwsItem nieuwsitem) {
 		 System.out.println("service werkt");
@@ -49,6 +60,10 @@ public class NuwsService {
 	
 	public ArrayList<Gebruiker> getUsersFromDatabase() {
 		return (ArrayList<Gebruiker>) gebruikerrepository.findAll();
+	}
+	
+	public Gebruiker getUserFromDatabase(long id) {
+		return gebruikerrepository.findOne(id);
 	}
 	
 	public NieuwsItem getFromDatabase(long id) {
