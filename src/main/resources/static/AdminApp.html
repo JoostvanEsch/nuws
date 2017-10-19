@@ -25,17 +25,20 @@
                             document.getElementById("newsItemInDatabaseList").innerHTML = "";
                             var data = JSON.parse(this.responseText);
                             for (i = 0; i < data.length; i++){
-                                    var titelvak =  document.createElement("div");
-                                    titelvak.innerHTML = "<b>"+data[i].title+"</b>";
-                                    var tagvak =  document.createElement("div");
-                                    tagvak.innerHTML = "<i>Tags: "+data[i].tags+"</i>";
-                                    var htmlbreak =  document.createElement("br");
-                                    document.getElementById("newsItemInDatabaseList").appendChild(titelvak);
-                                    document.getElementById("newsItemInDatabaseList").appendChild(htmlbreak);
-                                    document.getElementById("newsItemInDatabaseList").appendChild(tagvak);
-                                    document.getElementById("newsItemInDatabaseList").appendChild(htmlbreak);
-                               }
+                                var titelvak =  document.createElement("div");
+                                titelvak.innerHTML = "<b>"+data[i].title+"</b>";
+                                var tagvak =  document.createElement("div");
+                                tagvak.innerHTML = "<i>Tags: "+data[i].tags+"</i>";
+                                var deletebutton = document.createElement("button");
+                                deletebutton.innerHTML = "Delete Item";
+                                var idInt = data[i].id;
+                                deletebutton.id = idInt;
+                                deletebutton.addEventListener("click", function(){deleteOne(this.id)});
+                                document.getElementById("newsItemInDatabaseList").appendChild(titelvak);                                  
+                                document.getElementById("newsItemInDatabaseList").appendChild(tagvak);
+                                document.getElementById("newsItemInDatabaseList").appendChild(deletebutton);
                                 
+                            }     
                         }
                     };
                 xhttp.open("GET", "http://localhost:8082/nuwstitles");
@@ -88,14 +91,19 @@
                 var xhttp = new XMLHttpRequest();
                     xhttp.onreadystatechange = function() {
                         if (this.readyState == 4 && this.status == 200) {
-                            document.getElementById("taglist").innerHTML = ""; 
+                            document.getElementById("taglist").innerHTML = "";
+                            document.getElementById("listbox").innerHTML = "<option selected></option>";
                             tagCount = 0;
                             var data = JSON.parse(this.responseText);
                             for (i = 0; i < data.length; i++) {
                                 tagCount++;
                             	var j = parseInt(i);
                                 var textaccumulation = "<label class=container><input id='tag"+tagCount+"' name='"+data[j].tag+"' type='checkbox'>"+data[j].tag+"<span class='checkmark'></span></label><br>"
-                                document.getElementById("taglist").innerHTML += textaccumulation;  
+                                document.getElementById("taglist").innerHTML += textaccumulation;
+                                var tagListbox =  document.createElement("option");
+                                tagListbox.value=data[j].id;
+                                tagListbox.innerHTML = data[j].tag;
+                                document.getElementById("listbox").appendChild(tagListbox);
                             }     
                         }
                     };
@@ -117,6 +125,19 @@
                 xhttp.send();
             }
             
+            function deleteOne(id){
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                       getNewsItemList();
+                    }
+                };
+                xhttp.open("DELETE", "http://localhost:8082/deleteone/"+id, true);
+                xhttp.setRequestHeader("Content-type", "application/json");
+                xhttp.send();
+            }
+                
+            
             function newTag(){
             	var newtag= document.getElementById("newTagInput").value;
                 var tag = '{"tag":"'+newtag+'"}'; 
@@ -130,10 +151,34 @@
                 };
                 xhttp.open("POST", "http://localhost:8082/newtag", true);
                 xhttp.setRequestHeader("Content-type", "application/json");
-                xhttp.send(tag);
-                
-                
+                xhttp.send(tag); 
             }
+            
+            function deleteTag(){
+                var targetTag = document.getElementById("listbox");
+                var tagid = ""
+                for (i = 1; i <= tagCount; i++){
+                    currentOption = targetTag[i];
+                    if (currentOption.selected == true){
+                       tagid =currentOption.value;
+                       var endpoint = "deletetag/"+tagid;
+                       sendDeleteRequest(endpoint, getTags);
+                    }
+                }
+            }
+            
+            function sendDeleteRequest(endpoint, callbackFunction){
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        callbackFunction();
+                    };
+                }    
+                    xhttp.open("DELETE", "http://localhost:8082/"+endpoint, true);
+                    xhttp.setRequestHeader("Content-type", "application/json");
+                    xhttp.send();
+            }
+            
                 
    
         </script>
@@ -185,6 +230,10 @@
             Tags: <br>
             <input type="text" id="newTagInput" name="FirstName" value="">
             <button type="button" id="buttonNewTag" onclick="newTag()">Add new tag</button><br>
+            <select id="listbox">
+                <option selected></option>
+            </select> 
+            <button type="button" id="buttonDeleteTag" onclick="deleteTag()">Remove Tag</button><br>
             <hr>
             Newsitems on site:<br>
             

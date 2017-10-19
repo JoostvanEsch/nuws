@@ -65,6 +65,13 @@ public class NuwsService {
 		nuwsrepository.deleteAll();
 		//return nieuwsitem;
 	}
-	
+        
+        public void deleteOneFromDatabase(long id) {
+		nuwsrepository.delete(id);
+        }
+        
+        public void deleteTagFromDatabase(long id){
+           tagrepository.delete(id);
+        }
 	
 }
