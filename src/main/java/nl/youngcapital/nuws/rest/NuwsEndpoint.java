@@ -72,6 +72,15 @@ public class NuwsEndpoint {
                 return "";
         }
         
+    	@ResponseBody
+    	@GetMapping("/getreviews/{id}")
+    	public List<Review> getReviews(@PathVariable long id) {
+    		
+    		List<Review> reviewList = nuwsservice.getReviewsFromDatabase(id);
+    		return reviewList;
+
+    	}
+        
         @ResponseBody
         @GetMapping("/adminlogin")
         public List<Admin> getAdmins(){
@@ -140,8 +149,9 @@ public class NuwsEndpoint {
 	}
 	
 	@PostMapping("/addRegistration")
-	public void postAddRegistration(@RequestBody Gebruiker gebruiker){
+	public boolean postAddRegistration(@RequestBody Gebruiker gebruiker){
 		nuwsservice.addToDatabase(gebruiker);
+		return true;
 	}
 	
 	@PostMapping("/login")
