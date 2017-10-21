@@ -80,6 +80,14 @@ public class NuwsEndpoint {
                 return adminList;
         }
         
+        @ResponseBody
+        @GetMapping("/getoneadmin/{id}")
+        public Admin getOneAdmin(@PathVariable long id){
+            Admin admin = nuwsservice.getOneAdminFromDatabase(id);
+            return admin;
+        }
+        
+        
         @DeleteMapping("/deleteone/{id}")
         public String deleteOne(@PathVariable long id){
 		System.out.println("endpoint werkt"+id);
@@ -110,18 +118,38 @@ public class NuwsEndpoint {
 		return TagList;
 	}
         
-	@PostMapping("/nuwspost")
-	public String postEntiteit(@RequestBody NieuwsItem nieuwsitem) throws IOException{
+	@PostMapping("/nuwspost/{id}")
+	public String postEntiteit(@RequestBody NieuwsItem nieuwsitem, @PathVariable long id) throws IOException{
                 System.out.println("EndPoint wordt geactiveerd");
+                Admin admin = nuwsservice.getOneAdminFromDatabase(id);
+                nieuwsitem.setAdmin(admin);
 		nuwsservice.addToDatabase(nieuwsitem);
                 return "";
 	}
+        
         
         @PostMapping("/newtag")
 	public void postNewTag(@RequestBody Tag tag) throws IOException{
 		nuwsservice.addTagToDatabase(tag);
 	}
 	
+        @PostMapping("/registeradmin")
+	public boolean postAdminRegistration(@RequestBody Admin admin){
+		List<Admin> adminList = nuwsservice.getAdminsFromDatabase();
+		boolean adminNameTaken = true;
+		for (Admin a : adminList) {
+                    if (a.getNaam().equalsIgnoreCase(admin.getNaam())){
+                        adminNameTaken = false;
+                    }         
+		}
+		if (adminNameTaken) {
+                    nuwsservice.addAdminToDatabase(admin);
+                    return false;
+		} 
+                else {
+                    return true;
+		}
+	}        
 
 	@PostMapping("/register")
 	public String postRegistration(@RequestBody Gebruiker gebruiker){
@@ -130,12 +158,13 @@ public class NuwsEndpoint {
 		
 		userList = nuwsservice.getUsersFromDatabase();
 		for (Gebruiker g : userList) {
-			if (g.getNaam().equalsIgnoreCase(gebruiker.getNaam())) userNameTaken = true;
+                    if (g.getNaam().equalsIgnoreCase(gebruiker.getNaam())) userNameTaken = true;
 		}
 		if (userNameTaken == false) {
-		return new String("true");
-		} else {
-		return new String("false");
+                    return new String("true");
+		} 
+                else {
+                    return new String("false");
 		}
 	}
 	

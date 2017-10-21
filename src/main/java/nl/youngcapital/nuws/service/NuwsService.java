@@ -42,7 +42,6 @@ public class NuwsService {
 
 
 	public void addToDatabase(NieuwsItem nieuwsitem) {
-		 System.out.println("service werkt");
                  nuwsrepository.save(nieuwsitem);
 		//return nieuwsitem;
 	}
@@ -70,6 +69,11 @@ public class NuwsService {
 		NieuwsItem n = nuwsrepository.findOne(id);
 		return n;
 	}
+        
+        public Admin getOneAdminFromDatabase(long id) {
+		Admin a = adminrepository.findOne(id);
+		return a;
+	}
 	
 	public List<NieuwsItem> getAllFromDatabase() {
 		return (List<NieuwsItem>) nuwsrepository.findAll();
@@ -81,9 +85,14 @@ public class NuwsService {
 	}
         
          public List<Admin> getAdminsFromDatabase() {
-                System.out.println("AdminService werkt");
+                
 		return (List<Admin>)adminrepository.findAll();
 	}
+        
+        public void addAdminToDatabase(Admin admin){
+            
+            adminrepository.save(admin);
+        }
         
         public void deleteAllDatabase() {
 		nuwsrepository.deleteAll();
