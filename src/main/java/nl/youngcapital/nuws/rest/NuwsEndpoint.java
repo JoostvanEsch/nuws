@@ -33,7 +33,32 @@ public class NuwsEndpoint {
 	@Autowired
 	NuwsService nuwsservice;
 	
-	@ResponseBody
+	@PostMapping("/updatenewsitemremove/{id}")
+        public String removeTagFromNewsitem(@RequestBody String targettag, @PathVariable long id){
+            NieuwsItem nieuwsitem = nuwsservice.getFromDatabase(id);
+            String oldtag = nieuwsitem.getTags();
+            if (oldtag.contains(targettag)){
+                String newtag = oldtag.replace(targettag+" ", "");
+                nieuwsitem.setTags(newtag);
+                nuwsservice.addToDatabase(nieuwsitem); 
+            }
+            return "";
+        }
+        
+        @PostMapping("/updatenewsitemadd/{id}")
+        public String addTagToNewsitem(@RequestBody String targettag, @PathVariable long id){
+            NieuwsItem nieuwsitem = nuwsservice.getFromDatabase(id);
+            String oldtag = nieuwsitem.getTags();
+            
+            if (!oldtag.contains(targettag)){
+                String newtag = oldtag.concat(targettag+" ");
+                nieuwsitem.setTags(newtag);
+                nuwsservice.addToDatabase(nieuwsitem); 
+            }
+            return "";
+        }
+        
+        @ResponseBody
 	@GetMapping("/nuws2/{id}")
 	public NieuwsItem getNuws2(@PathVariable long id) throws IOException{
 		NieuwsItem n = nuwsservice.getFromDatabase(id);
@@ -78,7 +103,6 @@ public class NuwsEndpoint {
         @ResponseBody
         @GetMapping("/adminlogin")
         public List<Admin> getAdmins(){
-		System.out.println(" admin endpoint werkt");
                 List<Admin> adminList = nuwsservice.getAdminsFromDatabase();
                 return adminList;
         }
