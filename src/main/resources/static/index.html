@@ -65,15 +65,11 @@
             		
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function() {
-                	console.log("hiep");
                     if (this.readyState == 4 && this.status == 200) {
-                    document.getElementById("loadreviews").innerHTML = "";
-                    console.log("hiep hoi");
+                    document.getElementById("loadreviews").innerHTML = "Comments<br>";
                     var reviews = JSON.parse(this.responseText);
                     for (i = 0; i < reviews.length; i++) {
-                    	   var j = parseInt(reviews[i].tekst);
-                    	   var color = getRandomColor();
-                        var textaccumulation = "<div class=\"review\">" + reviews[i].tekst  + "</div>";
+                        var textaccumulation = "<div class=\"review\">" + reviews[i].tekst + "<br>Added by " + reviews[i].gebruiker.naam +"</div>";
                         document.getElementById("loadreviews").innerHTML += textaccumulation;
                     }
                    }
@@ -230,9 +226,11 @@
 	.review{
 		margin-top:10px;
 		padding:3px;
-		color:#fff;
+		color:#444;
+		font:10px;
+		font-weight:normal;
 		font-style:italic;
-		background-color:#444;
+		background-color:#fafafa;
 	}
 	
 	#loginPane{
@@ -244,6 +242,10 @@
 	#reviewpane{
 	display:none;
 	padding-top:35px;
+	}
+	#loadreviews{
+	padding-top:35px;
+	font-weight:bold;
 	}
 
 	
