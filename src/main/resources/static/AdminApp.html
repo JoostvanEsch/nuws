@@ -29,20 +29,24 @@
                         if (this.readyState == 4 && this.status == 200) {
                             document.getElementById("newsItemInDatabaseList").innerHTML = "";
                             var data = JSON.parse(this.responseText);
-                            for (i = 0; i < data.length; i++){
+                            for (i = data.length-1; i >= 0; i--){
+                               
                                 var titelvak =  document.createElement("div");
                                 titelvak.innerHTML = "<b>"+data[i].title+"</b>";
                                 var tagvak =  document.createElement("div");
                                 tagvak.innerHTML = "<i>Tags: "+data[i].tags+"</i>";
+                                var adminvak =  document.createElement("div");
+
+                                adminvak.innerHTML = "<i>Added by "+data[i].admin.naam+" on "+data[i].datetime+"</i>" ;
                                 var deletebutton = document.createElement("button");
                                 deletebutton.innerHTML = "Delete Item";
                                 var idInt = data[i].id;
                                 deletebutton.id = idInt;
                                 deletebutton.addEventListener("click", function(){deleteOne(this.id)});
                                 document.getElementById("newsItemInDatabaseList").appendChild(titelvak);                                  
+                                document.getElementById("newsItemInDatabaseList").appendChild(adminvak);
                                 document.getElementById("newsItemInDatabaseList").appendChild(tagvak);
                                 document.getElementById("newsItemInDatabaseList").appendChild(deletebutton);
-                                
                             }     
                         }
                     };
@@ -54,19 +58,19 @@
             function newNieuwsItem(){
                 var newUrl= document.getElementById("nieuwsurlinput").value;
                 var newTags = convertTagListToString();
+                var id = currentAdmin;
                 var nieuwsitem = '{"tags":"'+newTags+'" ,"url":"'+newUrl+'"}'; 
-                console.log(nieuwsitem);
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function() {
                     if (this.readyState == 4 && this.status == 200) {
                         getNewsItemList();
                     }
                 };
-                xhttp.open("POST", "http://localhost:8082/nuwspost", true);
+                xhttp.open("POST", "http://localhost:8082/nuwspost/"+id, true);
                 xhttp.setRequestHeader("Content-type", "application/json");
                 xhttp.send(nieuwsitem);
             }
-             
+            
             function kopieerURL(value){
                 document.getElementById("nieuwsurlinput").value = value;
             }
@@ -97,7 +101,7 @@
                     xhttp.onreadystatechange = function() {
                         if (this.readyState == 4 && this.status == 200) {
                             document.getElementById("taglist").innerHTML = "";
-                            document.getElementById("listbox").innerHTML = "<option selected></option>";
+                            document.getElementById("taglistbox").innerHTML = "<option selected></option>";
                             tagCount = 0;
                             var data = JSON.parse(this.responseText);
                             for (i = 0; i < data.length; i++) {
@@ -108,7 +112,7 @@
                                 var tagListbox =  document.createElement("option");
                                 tagListbox.value=data[j].id;
                                 tagListbox.innerHTML = data[j].tag;
-                                document.getElementById("listbox").appendChild(tagListbox);
+                                document.getElementById("taglistbox").appendChild(tagListbox);
                             }     
                         }
                     };
@@ -221,11 +225,33 @@
                 document.getElementById("rechterhelft").style.visibility="hidden"
             }
             
-            
+           
             function registerNewAdmin(){
-                var newUsername = document.getElementById("registerUsernameTextbox").value
-                var newPassword = document.getElementById("registerUsernameTextbox").value
+                var newUsername = document.getElementById("registerUsernameTextbox").value;
+                var newPassword = document.getElementById("registerPsswordTextbox").value;
+                var listboxcontent = document.getElementById("adminlistbox");
+                var adminType = 2;
+                if (listboxcontent[2].selected == true){
+                    adminType = 1
+                }
+                var admin = '{"naam":"'+newUsername+'" ,"password":"'+newPassword+'" ,"admintype":"'+adminType+'"}';
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var response = JSON.parse(this.responseText);
+                        document.getElementById("registerUsernameTextbox").value = "";
+                        document.getElementById("registerPsswordTextbox").value = "";
+                        if(response){
+                            alert("Registration failed! Username allready exists.");
+                        }
+                    };
+                }    
+                xhttp.open("POST", "http://localhost:8082/registeradmin", true);
+                xhttp.setRequestHeader("Content-type", "application/json");
+                xhttp.send(admin);
             }
+              
+            
             
             function deleteTag(){
                 var targetTag = document.getElementById("taglistbox");
@@ -284,9 +310,9 @@
         
         <div id='preloginfield' style='float:left'>
             Username:
-            <input type="text" id="usernameTextbox" name="FirstName" value="">
+            <input type="text" id="usernameTextbox" name="Name" value="Reindert">
             Password:
-            <input type="text" id="passwordTextbox" name="FirstName" value="">
+            <input type="text" id="passwordTextbox" name="Password" value="reindert">
             <button type="button" id="loginbutton" onclick="login()">Login</button><br>
         </div>
         <div id='loggedinAdmin' style='float:left; visibility:hidden'>
