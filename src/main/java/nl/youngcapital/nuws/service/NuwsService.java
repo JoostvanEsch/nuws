@@ -57,6 +57,19 @@ public class NuwsService {
 		//return nieuwsitem;
 	}
 	
+	public List<Review> getReviewsFromDatabase(long nieuwsItemId) {
+		ArrayList<Review> allReviews = (ArrayList<Review>) reviewrepository.findAll();
+		ArrayList<Review> returnList = new ArrayList<Review>();
+		
+		for (Review r : allReviews) {
+			if (r.getNieuwsitem().getId() == nieuwsItemId) {
+				returnList.add(r);
+			}
+		}
+		
+		return (List<Review>) returnList;
+	}
+	
 	public ArrayList<Gebruiker> getUsersFromDatabase() {
 		return (ArrayList<Gebruiker>) gebruikerrepository.findAll();
 	}
