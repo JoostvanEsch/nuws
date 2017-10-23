@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import java.time.*;
 
 
 @Entity
@@ -16,7 +17,7 @@ public class NieuwsItem {
     private String tags;
     @ManyToOne
     private Admin admin;
-    
+    private String datetime;
     private String title;
     private String sub;
     private String bodytext;
@@ -24,16 +25,26 @@ public class NieuwsItem {
 
 	public NieuwsItem() {
     }
-	
-	public NieuwsItem(String url) {
-        this.url = url;
-    }
 
-    public NieuwsItem(Long id, String url, String tags, Admin admin) throws IOException {
+    public NieuwsItem(Long id, String url, String tags, Admin admin, String datetime, String title, String sub, String bodytext) {
         this.id = id;
         this.url = url;
         this.tags = tags;
         this.admin = admin;
+        this.datetime = datetime;
+        this.title = title;
+        this.sub = sub;
+        this.bodytext = bodytext;
+    }
+	
+    
+
+    public String getDatetime() {
+        return datetime;
+    }
+
+    public void setDatetime(String datetime) {
+        this.datetime = datetime;
     }
     
     
