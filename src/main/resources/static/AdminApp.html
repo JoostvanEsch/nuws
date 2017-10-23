@@ -2,7 +2,6 @@
 <!DOCTYPE html>
 <html>
     <head>
-        
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
@@ -30,27 +29,119 @@
                             document.getElementById("newsItemInDatabaseList").innerHTML = "";
                             var data = JSON.parse(this.responseText);
                             for (i = data.length-1; i >= 0; i--){
-                               
                                 var titelvak =  document.createElement("div");
                                 titelvak.innerHTML = "<b>"+data[i].title+"</b>";
                                 var tagvak =  document.createElement("div");
                                 tagvak.innerHTML = "<i>Tags: "+data[i].tags+"</i>";
                                 var adminvak =  document.createElement("div");
-
                                 adminvak.innerHTML = "<i>Added by "+data[i].admin.naam+" on "+data[i].datetime+"</i>" ;
                                 var deletebutton = document.createElement("button");
-                                deletebutton.innerHTML = "Delete Item";
+                                deletebutton.innerHTML = "Delete newsitem";
+                                deletebutton.addEventListener("click", function(){deleteOne(this.id);});
                                 var idInt = data[i].id;
                                 deletebutton.id = idInt;
-                                deletebutton.addEventListener("click", function(){deleteOne(this.id)});
+                                var itemtagbox =  document.createElement("select");
+                                itemtagbox.id = "tagListboxOfItem"+data[i].id;
+                                itemtagbox.innerHTML = "<option selected></option>";
+                                var removetagbutton =  document.createElement("button");
+                                removetagbutton.innerHTML = "Remove tag";
+                                removetagbutton.id = data[i].id;
+                                removetagbutton.addEventListener("click", function(){removeTagFromNewsitem(this.id);});
+                                var addtagbutton =  document.createElement("button");
+                                addtagbutton.innerHTML = "Add tag";
+                                addtagbutton.id = data[i].id;
+                                addtagbutton.addEventListener("click", function(){addTagToNewsitem(this.id);});
                                 document.getElementById("newsItemInDatabaseList").appendChild(titelvak);                                  
                                 document.getElementById("newsItemInDatabaseList").appendChild(adminvak);
                                 document.getElementById("newsItemInDatabaseList").appendChild(tagvak);
                                 document.getElementById("newsItemInDatabaseList").appendChild(deletebutton);
+                                document.getElementById("newsItemInDatabaseList").appendChild(itemtagbox);
+                                document.getElementById("newsItemInDatabaseList").appendChild(addtagbutton);
+                                document.getElementById("newsItemInDatabaseList").appendChild(removetagbutton);
+                                getTagsForItemList(data[i].id);
                             }     
                         }
                     };
                 xhttp.open("GET", "http://localhost:8082/nuwstitles");
+                xhttp.setRequestHeader("Content-type", "application/json");
+                xhttp.send();
+            }
+            
+            function removeTagFromNewsitem(id){
+                var targetTag = document.getElementById("tagListboxOfItem"+id);
+                var tagstring = "x";
+                var greenlight = false;
+                for (i = 1; i <= tagCount; i++){                   
+                    currentOption = targetTag[i];
+                    if (currentOption.selected == true){
+                       tagstring = currentOption.innerHTML;
+                       greenlight = true
+                    }
+                }
+                if (greenlight){
+                    var xhttp = new XMLHttpRequest();
+                    xhttp.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                           getNewsItemList();
+                        }
+                    };
+                    xhttp.open("POST", "http://localhost:8082/updatenewsitemremove/"+id, true);
+                    xhttp.setRequestHeader("Content-type", "application/json");
+                    xhttp.send(tagstring);
+                }    
+            }
+            
+            function addTagToNewsitem(id){
+                var targetTag = document.getElementById("tagListboxOfItem"+id);
+                var tagstring = "";
+                var greenlight = false;
+                for (i = 1; i <= tagCount; i++){                   
+                    currentOption = targetTag[i];
+                    if (currentOption.selected == true){
+                       tagstring = currentOption.innerHTML;
+                       greenlight = true
+                    }
+                }
+                if (greenlight){
+                    var xhttp = new XMLHttpRequest();
+                    xhttp.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                           getNewsItemList();
+                        }
+                    };
+                    xhttp.open("POST", "http://localhost:8082/updatenewsitemadd/"+id, true);
+                    xhttp.setRequestHeader("Content-type", "application/json");
+                    xhttp.send(tagstring);
+                }    
+            }
+            
+            function deleteTag(){
+                var targetTag = document.getElementById("taglistbox");
+                var tagid = "";
+                for (i = 1; i <= tagCount; i++){
+                    currentOption = targetTag[i];
+                    if (currentOption.selected == true){
+                       tagid =currentOption.value;
+                       var endpoint = "deletetag/"+tagid;
+                       sendDeleteRequest(endpoint, getTags);
+                    }
+                }
+            }
+            
+            function getTagsForItemList(id){
+                var xhttp = new XMLHttpRequest();
+                    xhttp.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                            var data = JSON.parse(this.responseText);
+                            for (j = 0; j < data.length; j++) {
+                                    var tagListbox =  document.createElement("option");
+                                    tagListbox.value=data[j].id;
+                                    tagListbox.innerHTML = data[j].tag;
+                                    document.getElementById("tagListboxOfItem"+id).appendChild(tagListbox);
+                                } 
+                        }
+                    };
+                xhttp.open("GET", "http://localhost:8082/nuwstags");
                 xhttp.setRequestHeader("Content-type", "application/json");
                 xhttp.send();
             }
@@ -107,13 +198,13 @@
                             for (i = 0; i < data.length; i++) {
                                 tagCount++;
                             	var j = parseInt(i);
-                                var textaccumulation = "<label class=container><input id='tag"+tagCount+"' name='"+data[j].tag+"' type='checkbox'>"+data[j].tag+"<span class='checkmark'></span></label><br>"
+                                var textaccumulation = "<label class=container><input id='tag"+tagCount+"' name='"+data[j].tag+"' type='checkbox'>"+data[j].tag+"<span class='checkmark'></span></label><br>";
                                 document.getElementById("taglist").innerHTML += textaccumulation;
                                 var tagListbox =  document.createElement("option");
                                 tagListbox.value=data[j].id;
                                 tagListbox.innerHTML = data[j].tag;
                                 document.getElementById("taglistbox").appendChild(tagListbox);
-                            }     
+                            } 
                         }
                     };
                 xhttp.open("GET", "http://localhost:8082/nuwstags");
@@ -168,7 +259,7 @@
                     xhttp.onreadystatechange = function() {
                         if (this.readyState == 4 && this.status == 200) {
                             var data = JSON.parse(this.responseText);
-                            processLogin(data)       
+                            processLogin(data);       
                         }
                     };
                 xhttp.open("GET", "http://localhost:8082/adminlogin");
@@ -180,7 +271,7 @@
                 var inputUsername = document.getElementById("usernameTextbox").value;
                 var inputPassword = document.getElementById("passwordTextbox").value;
                 var loginOK = false;
-                var superadmin = false
+                var superadmin = false;
                 var currentAdminNaam = "";
                 for (i = 0; i < data.length; i++) {
                    if (inputUsername === data[i].naam && inputPassword === data[i].password){
@@ -221,8 +312,8 @@
             }
             
             function hideMainContent(){
-                document.getElementById("linkerhelft").style.visibility="hidden"
-                document.getElementById("rechterhelft").style.visibility="hidden"
+                document.getElementById("linkerhelft").style.visibility="hidden";
+                document.getElementById("rechterhelft").style.visibility="hidden";
             }
             
            
@@ -232,7 +323,7 @@
                 var listboxcontent = document.getElementById("adminlistbox");
                 var adminType = 2;
                 if (listboxcontent[2].selected == true){
-                    adminType = 1
+                    adminType = 1;
                 }
                 var admin = '{"naam":"'+newUsername+'" ,"password":"'+newPassword+'" ,"admintype":"'+adminType+'"}';
                 var xhttp = new XMLHttpRequest();
@@ -245,25 +336,23 @@
                             alert("Registration failed! Username allready exists.");
                         }
                     };
-                }    
+                }; 
                 xhttp.open("POST", "http://localhost:8082/registeradmin", true);
                 xhttp.setRequestHeader("Content-type", "application/json");
                 xhttp.send(admin);
             }
               
             
-            
-            function deleteTag(){
-                var targetTag = document.getElementById("taglistbox");
-                var tagid = ""
-                for (i = 1; i <= tagCount; i++){
-                    currentOption = targetTag[i];
-                    if (currentOption.selected == true){
-                       tagid =currentOption.value;
-                       var endpoint = "deletetag/"+tagid;
-                       sendDeleteRequest(endpoint, getTags);
-                    }
-                }
+            function sendPostRequest(endpoint, callbackFunction, requestitem){
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        callbackFunction();
+                    };
+                }    
+                    xhttp.open("POST", "http://localhost:8082/"+endpoint, true);
+                    xhttp.setRequestHeader("Content-type", "application/json");
+                    xhttp.send(requestitem);
             }
             
             function sendDeleteRequest(endpoint, callbackFunction){
