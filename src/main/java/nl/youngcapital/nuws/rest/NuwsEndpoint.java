@@ -2,8 +2,11 @@ package nl.youngcapital.nuws.rest;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -123,6 +126,9 @@ public class NuwsEndpoint {
                 System.out.println("EndPoint wordt geactiveerd");
                 Admin admin = nuwsservice.getOneAdminFromDatabase(id);
                 nieuwsitem.setAdmin(admin);
+                LocalDateTime ldt = LocalDateTime.now();
+                String datetime = ldt.format(DateTimeFormatter.ofPattern("dd-MM-yyyy H:mm"));
+                nieuwsitem.setDatetime(datetime);
 		nuwsservice.addToDatabase(nieuwsitem);
                 return "";
 	}

@@ -29,27 +29,23 @@
                         if (this.readyState == 4 && this.status == 200) {
                             document.getElementById("newsItemInDatabaseList").innerHTML = "";
                             var data = JSON.parse(this.responseText);
-                            for (i = 0; i < data.length; i++){
-                                //getOneAdmin(data[i].admin.id);
-                                
-                                
-                
-                
+                            for (i = data.length-1; i >= 0; i--){
+                               
                                 var titelvak =  document.createElement("div");
                                 titelvak.innerHTML = "<b>"+data[i].title+"</b>";
                                 var tagvak =  document.createElement("div");
                                 tagvak.innerHTML = "<i>Tags: "+data[i].tags+"</i>";
                                 var adminvak =  document.createElement("div");
 
-                                adminvak.innerHTML = "<i>Added by: "+data[i].admin.naam+"</i>";
+                                adminvak.innerHTML = "<i>Added by "+data[i].admin.naam+" on "+data[i].datetime+"</i>" ;
                                 var deletebutton = document.createElement("button");
                                 deletebutton.innerHTML = "Delete Item";
                                 var idInt = data[i].id;
                                 deletebutton.id = idInt;
                                 deletebutton.addEventListener("click", function(){deleteOne(this.id)});
                                 document.getElementById("newsItemInDatabaseList").appendChild(titelvak);                                  
-                                document.getElementById("newsItemInDatabaseList").appendChild(tagvak);
                                 document.getElementById("newsItemInDatabaseList").appendChild(adminvak);
+                                document.getElementById("newsItemInDatabaseList").appendChild(tagvak);
                                 document.getElementById("newsItemInDatabaseList").appendChild(deletebutton);
                             }     
                         }
