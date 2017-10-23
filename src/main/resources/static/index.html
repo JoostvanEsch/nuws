@@ -6,30 +6,52 @@
 			var domain = "http://localhost:8082";
 			var currentUser = {id:"100",naam:"test",password:"testww"}
 			var currentNieuwsItem;
+			var currentAdmin;
+			var newsLoaded = false;
+			var isLoggedIn = false;
 			
             function startrefresh(){
-            	document.getElementById("thumbpane").innerHTML = "";
-            //	document.getElementById("loadnews").innerHTML = "";
+            	
                 var xhttp = new XMLHttpRequest();
                     xhttp.onreadystatechange = function() {
                         if (this.readyState == 4 && this.status == 200) {
                         document.getElementById("thumbpane").innerHTML = "";
                             var data = JSON.parse(this.responseText);
+                            var textaccumulation = "";
                             for (i = 0; i < data.length; i++) {
                             	   var j = parseInt(data[i].id);
                             	   var color = getRandomColor();
-                                var textaccumulation = "<a onclick='loadItem("+j+")'><div class=\"thumb\" style=\"background-color:"+color+";\">" + data[i].title  + "</div></a>";
-                                document.getElementById("thumbpane").innerHTML += textaccumulation;
+                                textaccumulation += "<a onclick='loadItem("+j+")'><div class=\"thumb\" style=\"background-color:"+color+";\">" + data[i].title  + "</div></a>";
                             }
-                                
+                            document.getElementById("thumbpane").innerHTML = "";
+                            document.getElementById("thumbpane").innerHTML += textaccumulation;
                         }
                     };
-                    console.log(domain);
-                    console.log(domain + "/nuwstitles");
                 xhttp.open("GET", (domain + "/nuwstitles"));
                 xhttp.setRequestHeader("Content-type", "application/json");
                 xhttp.send();
-            }	
+            }
+            
+            function showPostsByAdmin(id){
+                var xhttp = new XMLHttpRequest();
+                    xhttp.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                        document.getElementById("thumbpane").innerHTML = "";
+                            var data = JSON.parse(this.responseText);
+                            var textaccumulation = "";
+                            for (i = 0; i < data.length; i++) {
+                            	   var j = parseInt(data[i].id);
+                            	   var color = getRandomColor();
+                                textaccumulation += "<a onclick='loadItem("+j+")'><div class=\"thumb\" style=\"background-color:"+color+";\">" + data[i].title  + "</div></a>";
+                            }
+                            document.getElementById("thumbpane").innerHTML = "<div class=\"filter\">Showing posts by "+currentAdmin+"<br><a onclick=\"startrefresh()\">Remove filter</a></div>";
+                            document.getElementById("thumbpane").innerHTML += textaccumulation;
+                        }
+                    };
+                xhttp.open("GET", (domain + "/nuwstitles/" + id));
+                xhttp.setRequestHeader("Content-type", "application/json");
+                xhttp.send();
+            }
             
             function getRandomColor() {
             	  var letters = '0123456789ABCDEF';
@@ -47,12 +69,17 @@
                         document.getElementById("loadnews").innerHTML = "";
                             var nieuwsitem = JSON.parse(this.responseText);
                             currentNieuwsItem = this.responseText;
-                            console.log(currentNieuwsItem);
-                                var textaccumulation = "<h1>" + nieuwsitem.title + "</h1>"  + "<br><br>" + nieuwsitem.sub + "<br><br>" + nieuwsitem.bodytext;
+                            currentAdmin = nieuwsitem.admin.naam;
+                            console.log(currentAdmin);
+                                var textaccumulation = "<h1>" + nieuwsitem.title + "</h1>";
+                                textaccumulation += "<h2>Added by <a onclick=\"showPostsByAdmin("+nieuwsitem.admin.id+")\">"+ nieuwsitem.admin.naam + "</a></h2>";
+                                textaccumulation += "<br><br>" + nieuwsitem.sub + "<br><br>" + nieuwsitem.bodytext;
                                 document.getElementById("loadnews").innerHTML += textaccumulation;
+                                newsLoaded = true;
+                                if (isLoggedIn == true) {
+                                	document.getElementById("reviewpane").style.display = 'block';
+                                }
                                 loadReviews(id);
-                            
-                                
                         }
                     };
                 xhttp.open("GET", domain + "/nuws2/"+id);
@@ -61,8 +88,6 @@
             }
             
             function loadReviews(id){
-            		alert("reviews laoded " + id);
-            		
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function() {
                     if (this.readyState == 4 && this.status == 200) {
@@ -104,6 +129,7 @@
                     xhttp.open("POST", domain + "/addRegistration", true);
                     xhttp.setRequestHeader("Content-type", "application/json");
                     xhttp.send(gebruiker);
+                    alert("Gebruiker geregistreerd");
                     if (this.responeText == true){
                     	alert("dit werkt");
                     login(gebruiker);
@@ -130,17 +156,20 @@
             
             function checkLogin(messageFromEndpoint){
             	if (messageFromEndpoint == "Password incorrect") {
-            		alert("pass inc");
+            		alert("Dit wachtwoord is onjuist.");
             	} else if (messageFromEndpoint == "Username does not exist") {
-            		alert("user no exist");
+            		alert("Deze gebruikersnaam bestaat niet.");
             } else {
             	setCurrentUser(messageFromEndpoint);
+            	isLoggedIn = true;
         		var lpane = document.getElementById("loginPane");
         		var wpane = document.getElementById("welcomePane");
         		var rpane = document.getElementById("reviewpane");
         		lpane.style.display = 'none';
         		wpane.style.display = 'block';
+        		if (newsLoaded == true) {
         		rpane.style.display = 'block';
+        		}
             }
             }
             
@@ -151,7 +180,6 @@
                     xhttp.onreadystatechange = function() {
                         if (this.readyState == 4 && this.status == 200) {
                             currentUser = this.responseText;
-                            console.log("Current User = " + currentUser);
                             wpane.innerHTML = "<input type=\"submit\" value=\"Log-out\" onclick=\"logout()\">";
                     			wpane.innerHTML += "Welkom " +JSON.parse(currentUser).naam+ "<br><hr>";
                         }
@@ -163,6 +191,7 @@
         		
             
             function logout(){
+            	isLoggedIn = false;
             	var lpane = document.getElementById("loginPane");
         		var wpane = document.getElementById("welcomePane");
         		var rpane = document.getElementById("reviewpane");
@@ -175,16 +204,16 @@
             function addReview(){
         		var newReviewContent = document.getElementById("reviewcontent").value;
             var review = '{"tekst":"'+newReviewContent+'","nieuwsitem":'+currentNieuwsItem+',"gebruiker":'+currentUser+'}';
-            console.log("DIT IS EEN TEST\n"+review);
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function() {
                     if (this.readyState == 4 && this.status == 200) {
-                        //checkRegistration(this.responseText);
+                        loadReviews(JSON.parse(currentNieuwsItem).id);
                     }
                 };
                 xhttp.open("POST", domain + "/addReview", true);
                 xhttp.setRequestHeader("Content-type", "application/json");
                 xhttp.send(review);
+                
             }
             
             
@@ -198,10 +227,10 @@
 		padding-right:35px;
 	}
 	.textpane {
-		width:45%;
+		float:right;
+		width:40%;
 		height:auto;
 		background-color: #eee;
-		overflow-y:scroll;
 		margin-top:35px;
 		margin-right:35px;
 		padding-left:35px;
@@ -223,14 +252,36 @@
 		z-index:2;
 		overflow:hidden;
 	}
+		.filter {
+		width:100%;
+		height:60px;
+		margin-left:35px;
+		margin-top:35px;
+		padding:7px;
+		background-color: #09f;
+		border-radius:5px;
+		font-family:"Arial";
+		text-align:right;
+		float:right;
+		color:#fff;
+		align:center;
+		z-index:2;
+		overflow:hidden;
+	}
 	.review{
 		margin-top:10px;
 		padding:3px;
 		color:#444;
-		font:10px;
+		font-size:100%;
 		font-weight:normal;
 		font-style:italic;
 		background-color:#fafafa;
+	}
+	h2{
+	color:#444;
+		font-size:100%;
+		font-weight:normal;
+		font-style:italic;
 	}
 	
 	#loginPane{
@@ -261,25 +312,24 @@
   			Password: <input type="text" id="password">
  			<input type="submit" value="Log-in" onclick="login()">
  			<input type="submit" value="Register" onclick="register()">
+ 			<a href=/AdminApp.html>admin</a>
  			<hr>	
         </div>
         <div id="welcomePane">
-
         </div>
         
-        
-        <button type="button" id="buttoninput" onclick="startrefresh()" >Refresh newsitems</button>
-        <hr>	
-        <div class="thumbpane" id="thumbpane">Thumbs</div>
+        <div class="thumbpane" id="thumbpane"></div>
         <div class="textpane" >
+        
+        <div id="loadnews">
+        <br><br><br>Welkom op de site van Joost en Reindert.<br><br>
+        Deze applicatie is gebouwd als casus voor het Java traineeship van YoungCapital bij ITPH in Zwolle.
+        </div>
         <div id="reviewpane">
         <textarea id="reviewcontent" style="width:80%" rows="5" name="reviewcontent" form="reviewform">Enter comment...</textarea><br>
         <form id="reviewform">
         <input type="button" value="Submit" onclick="addReview()">
         </form>
-        </div>
-        <div id="loadnews">
-        Welkom op de site van Joost en Reindert.
         </div>
         <div id="loadreviews">
         
