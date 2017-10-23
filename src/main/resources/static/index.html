@@ -7,6 +7,8 @@
 			var currentUser = {id:"100",naam:"test",password:"testww"}
 			var currentNieuwsItem;
 			var currentAdmin;
+			var newsLoaded = false;
+			var isLoggedIn = false;
 			
             function startrefresh(){
             	
@@ -73,6 +75,10 @@
                                 textaccumulation += "<h2>Added by <a onclick=\"showPostsByAdmin("+nieuwsitem.admin.id+")\">"+ nieuwsitem.admin.naam + "</a></h2>";
                                 textaccumulation += "<br><br>" + nieuwsitem.sub + "<br><br>" + nieuwsitem.bodytext;
                                 document.getElementById("loadnews").innerHTML += textaccumulation;
+                                newsLoaded = true;
+                                if (isLoggedIn == true) {
+                                	document.getElementById("reviewpane").style.display = 'block';
+                                }
                                 loadReviews(id);
                         }
                     };
@@ -123,6 +129,7 @@
                     xhttp.open("POST", domain + "/addRegistration", true);
                     xhttp.setRequestHeader("Content-type", "application/json");
                     xhttp.send(gebruiker);
+                    alert("Gebruiker geregistreerd");
                     if (this.responeText == true){
                     	alert("dit werkt");
                     login(gebruiker);
@@ -149,17 +156,20 @@
             
             function checkLogin(messageFromEndpoint){
             	if (messageFromEndpoint == "Password incorrect") {
-            		alert("pass inc");
+            		alert("Dit wachtwoord is onjuist.");
             	} else if (messageFromEndpoint == "Username does not exist") {
-            		alert("user no exist");
+            		alert("Deze gebruikersnaam bestaat niet.");
             } else {
             	setCurrentUser(messageFromEndpoint);
+            	isLoggedIn = true;
         		var lpane = document.getElementById("loginPane");
         		var wpane = document.getElementById("welcomePane");
         		var rpane = document.getElementById("reviewpane");
         		lpane.style.display = 'none';
         		wpane.style.display = 'block';
+        		if (newsLoaded == true) {
         		rpane.style.display = 'block';
+        		}
             }
             }
             
@@ -181,6 +191,7 @@
         		
             
             function logout(){
+            	isLoggedIn = false;
             	var lpane = document.getElementById("loginPane");
         		var wpane = document.getElementById("welcomePane");
         		var rpane = document.getElementById("reviewpane");
@@ -193,7 +204,6 @@
             function addReview(){
         		var newReviewContent = document.getElementById("reviewcontent").value;
             var review = '{"tekst":"'+newReviewContent+'","nieuwsitem":'+currentNieuwsItem+',"gebruiker":'+currentUser+'}';
-            console.log("DIT IS EEN TEST\n"+review);
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function() {
                     if (this.readyState == 4 && this.status == 200) {
@@ -302,21 +312,18 @@
   			Password: <input type="text" id="password">
  			<input type="submit" value="Log-in" onclick="login()">
  			<input type="submit" value="Register" onclick="register()">
+ 			<a href=/AdminApp.html>admin</a>
  			<hr>	
         </div>
         <div id="welcomePane">
-
         </div>
         
-        
-        <button type="button" id="buttoninput" onclick="startrefresh()" >Refresh newsitems</button>
-        <a href=/AdminApp.html>admin</a>
-        <hr>	
         <div class="thumbpane" id="thumbpane"></div>
         <div class="textpane" >
         
         <div id="loadnews">
-        Welkom op de site van Joost en Reindert.
+        <br><br><br>Welkom op de site van Joost en Reindert.<br><br>
+        Deze applicatie is gebouwd als casus voor het Java traineeship van YoungCapital bij ITPH in Zwolle.
         </div>
         <div id="reviewpane">
         <textarea id="reviewcontent" style="width:80%" rows="5" name="reviewcontent" form="reviewform">Enter comment...</textarea><br>
