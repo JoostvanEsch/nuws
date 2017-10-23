@@ -45,6 +45,24 @@ public class NuwsEndpoint {
             return "";
         }
         
+        @PostMapping("/deletetagfromallnewsitems")
+         public String deleteTagFromAllNewsitems(@RequestBody String targettag){
+             long id = Long.parseLong(targettag);
+             Tag tag =  nuwsservice.getOneTagFromDatabase(id);
+             String tagstring = tag.getTag();
+             List<NieuwsItem> itemlist = nuwsservice.getAllFromDatabase();
+             for (NieuwsItem i : itemlist){
+                String oldtag = i.getTags();
+                if (oldtag.contains(tagstring)){
+                    String newtag = oldtag.replace(tagstring+" ", "");
+                    i.setTags(newtag);
+                    nuwsservice.addToDatabase(i); 
+                }
+            }
+            return "";
+        }
+
+        
         @PostMapping("/updatenewsitemadd/{id}")
         public String addTagToNewsitem(@RequestBody String targettag, @PathVariable long id){
             NieuwsItem nieuwsitem = nuwsservice.getFromDatabase(id);
