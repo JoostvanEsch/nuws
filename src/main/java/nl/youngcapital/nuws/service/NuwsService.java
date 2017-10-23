@@ -91,6 +91,17 @@ public class NuwsService {
 	public List<NieuwsItem> getAllFromDatabase() {
 		return (List<NieuwsItem>) nuwsrepository.findAll();
 	}
+	
+	public List<NieuwsItem> getAllFromDatabase(long id) {
+		List<NieuwsItem> l = (List<NieuwsItem>) nuwsrepository.findAll();
+		ArrayList<NieuwsItem> list = new ArrayList<NieuwsItem>();
+		for (NieuwsItem i : l) {
+			if (i.getAdmin().getId() == id) {
+				list.add(i);
+			}
+		}
+		return list;
+	}
         
         public List<Tag> getTagsFromDatabase() {
                
