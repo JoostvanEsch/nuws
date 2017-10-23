@@ -94,11 +94,32 @@ public class NuwsEndpoint {
 		return NITList;
 	}
 	
+	@ResponseBody
+	@GetMapping("/nuwstitles/{id}")
+	public List<NieuwsItem> getNuwsTitlesByAdmin(@PathVariable long id) throws IOException{
+		
+		List<NieuwsItem> NITList = nuwsservice.getAllFromDatabase(id);
+		for (NieuwsItem n : NITList) {
+			n.setTitle(new Scraper(n.getUrl()).scrapeTitle(new URL(n.getUrl())));
+		}
+		
+		return NITList;
+	}
+	
         @GetMapping("/nuwsdelete")
         public String deleteNuws(){
                 nuwsservice.deleteAllDatabase();
                 return "";
         }
+        
+    	@ResponseBody
+    	@GetMapping("/getreviews/{id}")
+    	public List<Review> getReviews(@PathVariable long id) {
+    		
+    		List<Review> reviewList = nuwsservice.getReviewsFromDatabase(id);
+    		return reviewList;
+
+    	}
         
         @ResponseBody
         @GetMapping("/adminlogin")
@@ -199,8 +220,9 @@ public class NuwsEndpoint {
 	}
 	
 	@PostMapping("/addRegistration")
-	public void postAddRegistration(@RequestBody Gebruiker gebruiker){
+	public boolean postAddRegistration(@RequestBody Gebruiker gebruiker){
 		nuwsservice.addToDatabase(gebruiker);
+		return true;
 	}
 	
 	@PostMapping("/login")
