@@ -39,8 +39,7 @@
                 padding: 2px 4px 2px 4px;
                 border: solid #1f628d 1px;
                 text-decoration: none;
-                margin-left: 1px;
-                margin-right: 1px;
+                margin: 1px;
             }
 
             button:hover {
@@ -78,14 +77,22 @@
             }
             
             #linkerhelft{
-                padding: 20;
+                padding-top: 4px;
+                padding-bottom: 4px;
+                padding-left: 4px;
+                padding-right: 2px;
                 float:  left; 
                 width:  50%; 
                 height: 1000px;
             } 
             
             #rechterhelft{
-                float:  right; 
+                padding: 4px;
+                fpadding-top: 4px;
+                padding-bottom: 4px;
+                padding-left: 2px;
+                padding-right: 4px; 
+                float: right;
                 width:  50%; 
                 height: 1000px;
             }
@@ -109,17 +116,18 @@
              #linkfield{
                 padding: 4px;
                 height: 30%;
-                overflow-y: scroll;
+                overflow-y: scroll; 
                 background-color: #EEEEEE;
              }
              
              #iframefield{
                 padding: 4px;
                 background-color: #EEEEEE; 
+                
              }
              
              #linklistheader{
-                padding: 4px;
+                
                 background-color: #EEEEEE; 
              }
              
@@ -130,6 +138,9 @@
              
              }
              
+             #artikellijst{
+                
+             }
              /* H4 ELEMENTS*/
              
              h4{
@@ -204,7 +215,6 @@
                 <h4>Preview</h4>
             </div>
             <div id='iframefield'>
-                
                 <iframe name='nunl_iframe'></iframe>
             </div>
         </div>
@@ -212,13 +222,13 @@
         <!-- ADMIN TOOLS -->
         <div id="rechterhelft">
             <div id='toolAddNews'>
-                <h4>Add newsitem</h4><br>
+                <h4>Add newsitem</h4>
                 <input type="text" id="nieuwsurlinput" name="FirstName" value=""><br>
                 <p id="taglist"></p>
                 <button type="button" id="buttoninput" onclick="newNieuwsItem()">Add newsitem</button>
             </div>
             <div id='toolTags'>
-                <h4>Tags</h4><br>
+                <h4>Tags</h4>
                 <input type="text" id="newTagInput" name="FirstName" value="">
                 <button type="button" id="buttonNewTag" onclick="newTag()">Add new tag</button><br>
                 <select id="taglistbox">
@@ -227,7 +237,7 @@
                 <button type="button" id="buttonDeleteTag" onclick="deleteTag()">Remove Tag</button><br>
             </div>
             <div id='toolCurrentNews'>
-                <h4>Newsitems on site</h4><br>
+                <h4>Newsitems on site</h4>
                 <p id="newsItemInDatabaseList"></p>
                 <button type="button" id="buttonDeleteAll" onclick="deleteAll()" disabled>Delete all newsitems</button>
                 <input id='UnlockDeleteAll' type='checkbox' onclick="Unlock()">Unlock 

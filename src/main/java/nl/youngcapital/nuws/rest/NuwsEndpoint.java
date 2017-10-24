@@ -160,7 +160,7 @@ public class NuwsEndpoint {
         @ResponseBody
         @DeleteMapping("/deleteone/{id}")
         public String deleteOne(@PathVariable long id){
-		System.out.println("endpoint werkt"+id);
+		
                 nuwsservice.deleteOneFromDatabase(id);
                 return "";
         }
@@ -168,7 +168,7 @@ public class NuwsEndpoint {
         @ResponseBody
         @DeleteMapping("/deletetag/{id}")
         public String deleteTag(@PathVariable long id){
-		System.out.println("endpoint werkt"+id);
+		
                 nuwsservice.deleteTagFromDatabase(id);
                 return "";
         }
@@ -176,7 +176,7 @@ public class NuwsEndpoint {
         @ResponseBody
 	@GetMapping("/nunllinks")
         public List<String> getNUNLlinks()throws IOException {
-            System.out.println("getNUNLlinks EndPoint wordt geactiveerd");
+  
             LinkList.generateList();
             List<String> y = LinkList.getNunlList();
             return y;
@@ -192,7 +192,7 @@ public class NuwsEndpoint {
         @ResponseBody
 	@PostMapping("/nuwspost/{id}")
 	public String postEntiteit(@RequestBody NieuwsItem nieuwsitem, @PathVariable long id){
-                System.out.println("EndPoint wordt geactiveerd");
+             
                 Admin admin = nuwsservice.getOneAdminFromDatabase(id);
                 nieuwsitem.setAdmin(admin);
                 LocalDateTime ldt = LocalDateTime.now();
