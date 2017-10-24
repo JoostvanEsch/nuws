@@ -55,18 +55,15 @@
             }
             
             function showPostsByTag(tag){
-            	console.log("functie showpostsbytag gestart");
                 var xhttp = new XMLHttpRequest();
                     xhttp.onreadystatechange = function() {
                         if (this.readyState == 4 && this.status == 200) {
-                        	console.log("tot hier");
                         document.getElementById("thumbpane").innerHTML = "";
                             var data = JSON.parse(this.responseText);
                             var textaccumulation = "";
                             for (i = 0; i < data.length; i++) {
                             	   var j = parseInt(data[i].id);
                             	   var color = getRandomColor();
-                            	   console.log(data[i].title);
                                 textaccumulation += "<a onclick='loadItem("+j+")'><div class=\"thumb\" style=\"background-color:"+color+";\">" + data[i].title  + "</div></a>";
                             }
                             document.getElementById("thumbpane").innerHTML = "<div class=\"filter\">Showing posts related to "+tag+"<br><br><a onclick=\"startrefresh()\">Remove filter</a></div>";
@@ -95,10 +92,9 @@
                             var nieuwsitem = JSON.parse(this.responseText);
                             currentNieuwsItem = this.responseText;
                             currentAdmin = nieuwsitem.admin.naam;
-                            console.log(currentAdmin);
                                 var textaccumulation = "<h1>" + nieuwsitem.title + "</h1>";
                                 textaccumulation += "<h2>Added by <a style=\"color:#00e; text-decoration:underline;\" onclick=\"showPostsByAdmin("+nieuwsitem.admin.id+")\">"+ nieuwsitem.admin.naam + "</a><br>";
-                                textaccumulation += "Tags: "+ "tag1" + "</h2>";
+                                textaccumulation += "<div id=\"taglist\"></div></h2>";
                                 textaccumulation += "<br><br>" + nieuwsitem.sub + "<br><br>" + nieuwsitem.bodytext;
                                 document.getElementById("loadnews").innerHTML += textaccumulation;
                                 newsLoaded = true;
@@ -107,7 +103,6 @@
                                 }
                                 loadReviews(id);
                                 getTagsFromItem(id);
-                                console.log(currentTagList);
                         }
                     };
                 xhttp.open("GET", domain + "/nuws2/"+id);
@@ -119,12 +114,13 @@
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function() {
                     if (this.readyState == 4 && this.status == 200) {
-                    document.getElementById("loadreviews").innerHTML = "Comments<br>";
+                    document.getElementById("loadreviews").innerHTML = "Comments:<br>";
                     var reviews = JSON.parse(this.responseText);
                     for (i = 0; i < reviews.length; i++) {
                         var textaccumulation = "<div class=\"review\">\"" + reviews[i].tekst + "\"<br><br>Added by " + reviews[i].gebruiker.naam +"</div>";
                         document.getElementById("loadreviews").innerHTML += textaccumulation;
                     }
+                    if (reviews.length == 0) { document.getElementById("loadreviews").innerHTML += "<p>Er zijn nog geen comments.</p>";}
                    }
                 };
             		
@@ -137,20 +133,15 @@
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function() {
                     if (this.readyState == 4 && this.status == 200) {
-                    	currentTagList = "Tags: ";
                     var tags = JSON.parse(this.responseText);
-                    console.log(tags[0]);
-                    console.log(tags.length);
+                    if (tags.length == 0) {currentTagList = "";} else {currentTagList = "Tags: ";}
                     for (i = 0; i < tags.length; i++) {
                     		if (i < (tags.length - 1)) {
-                    			console.log("meer dan 1 tag");
-                        		var textaccumulation = "<a onclick='showPostsByTag(\"" + tags[i] + "\")'>" + tags[i] + "</a>, ";
+                        		var textaccumulation = "<a style=\"color:#00e; text-decoration:underline;\" onclick='showPostsByTag(\"" + tags[i] + "\")'>" + tags[i] + "</a>, ";
                     		} else {
-                    			console.log("laatste tag");
-                    			var textaccumulation = "<a onclick='showPostsByTag(\"" + tags[i] + "\")'>" + tags[i] + "</a>";	
+                    			var textaccumulation = "<a style=\"color:#00e; text-decoration:underline;\" onclick='showPostsByTag(\"" + tags[i] + "\")'>" + tags[i] + "</a>";	
                     		}
                         currentTagList += textaccumulation;
-                        console.log(currentTagList);
                     }
                     document.getElementById("taglist").innerHTML = currentTagList;
                    }
@@ -188,7 +179,7 @@
                     xhttp.send(gebruiker);
                     alert("Gebruiker geregistreerd");
                     if (this.responeText == true){
-                    	alert("dit werkt");
+        //TODO            	alert("dit werkt"); //TODO
                     login(gebruiker);
                     }
             		} else {
@@ -383,7 +374,6 @@
         
         <div class="thumbpane" id="thumbpane"></div>
         <div class="textpane" >
-        <div style="background-color:#0f0;" id="taglist">hjhjhjhjhjhjhjhj</div>
         <div id="loadnews">
         <br><br><br>Welkom op de site van Joost en Reindert.<br><br>
         Deze applicatie is gebouwd als casus voor het Java traineeship van YoungCapital bij ITPH in Zwolle.
@@ -395,7 +385,6 @@
         </form>
         </div>
         <div id="loadreviews">
-        
         </div>
         </div>
 
