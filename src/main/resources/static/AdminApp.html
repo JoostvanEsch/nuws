@@ -1,398 +1,239 @@
 
 <!DOCTYPE html>
 <html>
+    
     <head>
+        
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
-        <script>
-             var tagCount = 0;
-             var currentAdmin = 0;
-             var locked = true;
-             var newsitemlist = [];
-    
-            function startMethods(){
-                getNUNLlinks(); 
-                getTags(); 
-                getNewsItemList(); 
-                hideMainContent()
-            }
-    
-            function convertTagListToString(){
-                var tagstring = "";
-                for (i = 1; i <= tagCount; i++){
-                    var tagid = "tag"+i;
-                    var taglabelid = "taglabel"+i;
-                    if (document.getElementById(tagid).checked){
-                        tagstring = tagstring.concat(document.getElementById(tagid).name+" ");
-                    }
-                }
-                return tagstring;
-            }
-            
-            function getNewsItemList(){
-                sendXMLHttpRequest("GET", "nuwstitles", processNewsItemList, null);
-            }
-            
-            function processNewsItemList(data){
-                document.getElementById(id="newsItemInDatabaseList").innerHTML = "";
-                newsitemlist = [];
-                for (i = data.length-1; i >= 0; i--){
-                    var titelvak =  document.createElement("div");
-                    titelvak.innerHTML = "<b>"+data[i].title+"</b>";
-                    var tagvak =  document.createElement("div");
-                    tagvak.innerHTML = "<i>Tags: "+data[i].tags+"</i>";
-                    var adminvak =  document.createElement("div");
-                    adminvak.innerHTML = "<i>Added by "+data[i].admin.naam+" on "+data[i].datetime+"</i>" ;
-                    var deletebutton = document.createElement("button");
-                    deletebutton.innerHTML = "Delete newsitem";
-                    deletebutton.addEventListener("click", function(){deleteOne(this.id);});
-                    var idInt = data[i].id;
-                    deletebutton.id = idInt;
-                    var itemtagbox =  document.createElement("select");
-                    itemtagbox.id = "tagListboxOfItem"+data[i].id;
-                    itemtagbox.innerHTML = "<option selected></option>";
-                    var removetagbutton =  document.createElement("button");
-                    removetagbutton.innerHTML = "Remove tag";
-                    removetagbutton.id = data[i].id;
-                    removetagbutton.addEventListener("click", function(){removeTagFromNewsitem(this.id);});
-                    var addtagbutton =  document.createElement("button");
-                    addtagbutton.innerHTML = "Add tag";
-                    addtagbutton.id = data[i].id;
-                    addtagbutton.addEventListener("click", function(){addTagToNewsitem(this.id);});
-                    document.getElementById("newsItemInDatabaseList").appendChild(titelvak);                                  
-                    document.getElementById("newsItemInDatabaseList").appendChild(adminvak);
-                    document.getElementById("newsItemInDatabaseList").appendChild(tagvak);
-                    document.getElementById("newsItemInDatabaseList").appendChild(deletebutton);
-                    document.getElementById("newsItemInDatabaseList").appendChild(itemtagbox);
-                    document.getElementById("newsItemInDatabaseList").appendChild(addtagbutton);
-                    document.getElementById("newsItemInDatabaseList").appendChild(removetagbutton);
-                    newsitemlist.push(data[i].id)
-                }     
-                getTagsForItemList();
-            }
-            
-            function removeTagFromNewsitem(id){
-                var targetTag = document.getElementById("tagListboxOfItem"+id);
-                var tagstring = "x";
-                var greenlight = false;
-                for (i = 1; i <= tagCount; i++){                   
-                    currentOption = targetTag[i];
-                    if (currentOption.selected == true){
-                       tagstring = currentOption.innerHTML;
-                       greenlight = true
-                    }
-                }
-                if (greenlight){
-                    sendXMLHttpRequest("POST", "updatenewsitemremove/"+id, getNewsItemList, tagstring);
-                }    
-            }
-            
-            function addTagToNewsitem(id){
-                var targetTag = document.getElementById("tagListboxOfItem"+id);
-                var tagstring = "";
-                var greenlight = false;
-                for (i = 1; i <= tagCount; i++){                   
-                    currentOption = targetTag[i];
-                    if (currentOption.selected == true){
-                       tagstring = currentOption.innerHTML;
-                       greenlight = true
-                    }
-                }
-                if (greenlight){
-                    sendXMLHttpRequest("POST","updatenewsitemadd/"+id, getNewsItemList, tagstring);
-                    
-                }    
-            }
-            
-            function deleteTag(){
-                var targetTag = document.getElementById("taglistbox");
-                var tagid = "";
-                for (i = 1; i <= tagCount; i++){
-                    currentOption = targetTag[i];
-                    if (currentOption.selected == true){
-                       tagid =currentOption.value;
-                       var endpoint = "deletetag/"+tagid;
-                       
-                       sendXMLHttpRequest("DELETE", endpoint, getTags, null);
-                       sendXMLHttpRequest("POST", "deletetagfromallnewsitems", getTags, tagid);
-                    }
-                }
-            }
-            
-            function getTagsForItemList(){
-                sendXMLHttpRequest("GET", "nuwstags", processTagsForItemList, null)
-            }
-            
-            function processTagsForItemList(data){
-                for (j = 0; j < data.length; j++) {
-                    for (k =0; k < newsitemlist.length; k++){
-                        var tagListbox =  document.createElement("option");
-                        tagListbox.value=data[j].id;
-                        tagListbox.innerHTML = data[j].tag;
-                        document.getElementById("tagListboxOfItem"+newsitemlist[k]).appendChild(tagListbox);
-                    } 
-                }    
-            }
-            
-            function newNieuwsItem(){
-                var newUrl= document.getElementById("nieuwsurlinput").value;
-                var newTags = convertTagListToString();
-                var id = currentAdmin;
-                var nieuwsitem = '{"tags":"'+newTags+'" ,"url":"'+newUrl+'"}'; 
-                sendXMLHttpRequest("POST", "nuwspost/"+id, getNewsItemList, nieuwsitem);
-            }
-            
-            function kopieerURL(value){
-                document.getElementById("nieuwsurlinput").value = value;
-            }
-            
-            function getNUNLlinks(){
-                sendXMLHttpRequest("GET", "nunllinks", processNunlLinksRequest, null)
-             } 
-             
-            function processNunlLinksRequest(data){
-                for (i = 0; i < data.length; i++){
-                    var lijst = data[i];
-                    var indexA = lijst.indexOf("https");
-                    var indexB = lijst.indexOf("\" target=");
-                    var lijstUitgekleed = lijst.substring(indexA, indexB); 
-                    var lijstfinal = lijst + " -> <button id='button' type='button' onclick='kopieerURL(\""+ lijstUitgekleed + "\")'>copy URL</button><br>";
-                    document.getElementById("artikellijst").innerHTML += lijstfinal;
-                }
-            } 
-            
-            function getTags(){
-                sendXMLHttpRequest("GET", "nuwstags", processGetTagRequest, null)    
-            }
-            
-            function processGetTagRequest(data){
-                document.getElementById("newTagInput").value = "";
-                document.getElementById("taglist").innerHTML = "";
-                document.getElementById("taglistbox").innerHTML = "<option selected></option>";
-                tagCount = 0;
-                for (i = 0; i < data.length; i++) {
-                    tagCount++;
-                    var j = parseInt(i);
-                    var textaccumulation = "<label class=container><input id='tag"+tagCount+"' name='"+data[j].tag+"' type='checkbox'>"+data[j].tag+"<span class='checkmark'></span></label><br>";
-                    document.getElementById("taglist").innerHTML += textaccumulation;
-                    var tagListbox =  document.createElement("option");
-                    tagListbox.value=data[j].id;
-                    tagListbox.innerHTML = data[j].tag;
-                    document.getElementById("taglistbox").appendChild(tagListbox); 
-                } 
-                getNewsItemList();
-            }
-            
-            function deleteAll(){
-                sendXMLHttpRequest("DELETE", "nuwsdelete", getNewsItemList, null)
-            }
-            
-            function deleteOne(id){
-                sendXMLHttpRequest("DELETE", "deleteone/"+id, getNewsItemList, null)
-            }
-                
-            function newTag(){
-            	var newtag= document.getElementById("newTagInput").value;
-                var tag = '{"tag":"'+newtag+'"}'; 
-                sendXMLHttpRequest("POST","newtag", getTags, tag);
-            }
-            
-            function login(){
-                sendXMLHttpRequest("GET", "adminlogin", processLogin, null)
-            }
-            
-            function processLogin(data){
-                var inputUsername = document.getElementById("usernameTextbox").value;
-                var inputPassword = document.getElementById("passwordTextbox").value;
-                var loginOK = false;
-                var superadmin = false;
-                var currentAdminNaam = "";
-                for (i = 0; i < data.length; i++) {
-                   if (inputUsername === data[i].naam && inputPassword === data[i].password){
-                       loginOK = true;
-                       currentAdmin = data[i].id;
-                       currentAdminNaam = data[i].naam;
-                       if (data[i].admintype == 1){
-                           superadmin = true;
-                       }
-                   }
-                }
-                if (loginOK){
-                    document.getElementById("linkerhelft").style.visibility="visible";
-                    document.getElementById("rechterhelft").style.visibility="visible";  
-                    document.getElementById("loggedinAdmin").style.visibility="visible";
-                    document.getElementById("loggedinAdmin").innerHTML="Logged in as "+currentAdminNaam;
-                    document.getElementById("logoutbutton").style.visibility="visible";
-                    document.getElementById("linktousersite").style.visibility="visible";
-                    document.getElementById("preloginfield").style.visibility="hidden";
-                    if (superadmin){
-                         document.getElementById("adminregisterfield").style.visibility="visible";
-                    }
-                }
-                else{
-                    alert("Combination of Username and Password does not exist");
-                }  
-            }
-            
-            function logout(){
-                hideMainContent();
-                document.getElementById("preloginfield").style.visibility="visible";
-                currentAdmin = 0;
-                document.getElementById("loggedinAdmin").style.visibility="hidden";
-                document.getElementById("logoutbutton").style.visibility="hidden";
-                document.getElementById("adminregisterfield").style.visibility="hidden";
-                document.getElementById("linktousersite").style.visibility="hidden";
-                document.getElementById("usernameTextbox").value = "";
-                document.getElementById("passwordTextbox").value = "";  
-            }
-            
-            function hideMainContent(){
-                document.getElementById("linkerhelft").style.visibility="hidden";
-                document.getElementById("rechterhelft").style.visibility="hidden";
-            }
-            
-           
-            function registerNewAdmin(){
-                var newUsername = document.getElementById("registerUsernameTextbox").value;
-                var newPassword = document.getElementById("registerPsswordTextbox").value;
-                var listboxcontent = document.getElementById("adminlistbox");
-                var adminType = 2;
-                if (listboxcontent[2].selected == true){
-                    adminType = 1;
-                }
-                var admin = '{"naam":"'+newUsername+'" ,"password":"'+newPassword+'" ,"admintype":"'+adminType+'"}';
-                sendXMLHttpRequest("POST", "registeradmin", processNewAdminRequest, admin)
-            }    
-                
-            function processNewAdminRequest(data){
-                document.getElementById("registerUsernameTextbox").value = "";
-                document.getElementById("registerPsswordTextbox").value = "";
-                if(data){
-                    alert("Registration failed! Username allready exists.");
-                }
-            }
-              
-            function Unlock(){
-                if (locked){
-                    document.getElementById("buttonDeleteAll").disabled = false;
-                    locked = false
-                }
-                else{
-                    document.getElementById("buttonDeleteAll").disabled = true;
-                    locked = true
-                }
-            }
-            
-            // GENERIC METHOD FOR SENDING REQUESTS TO SERVER
-            function sendXMLHttpRequest(path ,endpoint, callbackFunction, requestitem){
-                console.log("HTTP Request")
-                var xhttp = new XMLHttpRequest();
-                xhttp.onreadystatechange = function() {
-                    if (this.readyState == 4 && this.status == 200) {
-                        console.log("HTTP Response")
-                        if (path == "GET"){
-                            var response = JSON.parse(this.responseText);
-                            callbackFunction(response);
-                        }
-                        else{
-                            callbackFunction();
-                        } 
-                    };
-                }    
-                xhttp.open(path, "http://localhost:8082/"+endpoint, true);
-                xhttp.setRequestHeader("Content-type", "application/json");
-                xhttp.send(requestitem);
-            }
-     
-        </script>
+        
+        <script src ="AdminApp.js"></script>
         
         <style>
-            iframe {
-                position: default;
-                border: none;
-                height: 100%;
-                width: 100%;
+            
+            /* A ELEMENTS */
+            
+            #linktousersite{
+                visibility: hidden;
             }
             
-            #linkfield{
+            /* BODY ELEMENT */
+            body{
+                background-image: url("nuwsbackground.png");
+                background-attachment: fixed;
+            }
+            
+            /* BUTTON ELEMENTS */
+            
+            button {
+                -webkit-border-radius: 5;
+                -moz-border-radius: 5;
+                border-radius: 0px;
+                font-family: Arial;
+                color: #000000;
+                font-size: 14px;
+                background: #71bced;
+                padding: 2px 4px 2px 4px;
+                border: solid #1f628d 1px;
+                text-decoration: none;
+                margin-left: 1px;
+                margin-right: 1px;
+            }
+
+            button:hover {
+                background: #309ee3;
+                text-decoration: none;
+            }
+            
+            #logoutbutton{
+                float: left; 
+                visibility: hidden;
+            }
+            
+            /* DIV ELEMENTS */
+            
+            div {
+                border: 1px;
+                border-color: blue;
+                padding: 2px;
+            }
+                    
+            #preloginfield{
+                float: left;
+                color: #EEEEEE;
+            }
+            
+            #loggedinAdmin{
+                float: left; 
+                visibility: hidden;
+                color: #EEEEEE
+            }
+            
+            #adminregisterfield{
+                float:  right; 
+                visibility: hidden;
+            }
+            
+            #linkerhelft{
+                padding: 20;
+                float:  left; 
+                width:  50%; 
+                height: 1000px;
+            } 
+            
+            #rechterhelft{
+                float:  right; 
+                width:  50%; 
+                height: 1000px;
+            }
+            
+            #toolAddNews{
+                padding: 4px;
+                background-color: #EEEEEE;
+            }
+            
+            #toolCurrentNews{
+                padding: 4px;
+                background-color: #EEEEEE;
+            }
+            
+            #toolTags{
+                padding: 4px;
+                margin-bottom: 4px;
+                margin-top: 4px;
+                background-color: #EEEEEE;
+            }
+             #linkfield{
+                padding: 4px;
                 height: 30%;
                 overflow-y: scroll;
+                background-color: #EEEEEE;
+             }
+             
+             #iframefield{
+                padding: 4px;
+                background-color: #EEEEEE; 
+             }
+             
+             #linklistheader{
+                padding: 4px;
+                background-color: #EEEEEE; 
+             }
+             
+             #previewheader{
+                margin-top: 4px; 
+                padding: 4px;
+                background-color: #EEEEEE; 
+             
+             }
+             
+             /* H4 ELEMENTS*/
+             
+             h4{
+                 color: darkblue;
+                 font-family: serif;
+             }
+             
+             /* IFRAME ELEMENTS */
+            iframe {
+                position: default;
+                border: 2px;
+                border-color: blue;
+                height: 100%;
+                width: 100%; 
+                overflow-y: scroll;
             }
+            
+            /* INPUT ELEMENTS */
+            
+            input{
+                color: black;
+            }
+           
+            
             #iframefield{
                 height: 70%;
             }
-            #linkerhelft{
-                padding: 20;
-            }
+            
             
             #nieuwsurlinput{
                 width: 300;
             }
 
         </style>
+        
     </head>
    
     <body onload="startMethods()">
         
-        <div id='preloginfield' style='float:left'>
+        <!-- LOGIN BALK BOVEN IN SCHERM -->
+        <div id='preloginfield'>
             Username:
             <input type="text" id="usernameTextbox" name="Name" value="Reindert">
             Password:
             <input type="text" id="passwordTextbox" name="Password" value="reindert">
             <button type="button" id="loginbutton" onclick="login()">Login</button><br>
         </div>
-        <div id='loggedinAdmin' style='float:left; visibility:hidden'>
+        <div id='loggedinAdmin'>
         </div>
-        <button type="button" id="logoutbutton" style='float:left; visibility:hidden' onclick='logout()'>Logout</button>
-        <a href="index.html" target="_blank" id="linktousersite" style="visibility:hidden" ><input type="button" value="Nuws!"></a>
-        <div id='adminregisterfield' style=' float:right; visibility:hidden'>
+        <button type="button" id="logoutbutton" onclick='logout()'>Logout</button>
+        <a href="index.html" target="_blank" id="linktousersite"><input type="button" value="Nuws!"></a>
+        <div id='adminregisterfield'>
             <input type="text" id="registerUsernameTextbox" name="FirstName" value="new username">
-            <input type="text" id="registerPsswordTextbox" name="FirstName" value="newpassword">
+            <input type="text" id="registerPsswordTextbox" name="FirstName" value="new password">
             <select id="adminlistbox">
                 <option selected></option>
                 <option value='Admin'>Admin</option>
                 <option value='Superadmin'>Superadmin</option>
             </select>
-            <button type="button" id="registerbutton" onclick='registerNewAdmin()'>Register new admin</button>
-            
+            <button type="button" id="registerbutton" onclick='registerNewAdmin()'>Register new admin</button>         
         </div>
-
-        <div id='linkerhelft' style='float:left; width:50%; height:1000px'>
+        
+        <!-- NU.NL LINK-LIJST EN PREVIEWSCHERM -->
+        <div id='linkerhelft'>
+            <div id="linklistheader">
+                <h4>Nu.nl headlines</h4>
+            </div>
             <div id='linkfield'>
                 <p id='artikellijst'></p> 
             </div>
+            <div id="previewheader">
+                <h4>Preview</h4>
+            </div>
             <div id='iframefield'>
+                
                 <iframe name='nunl_iframe'></iframe>
             </div>
         </div>
         
-        <div id="rechterhelft" style='float:right; width:50%; height:1000px'>
-            <br>
-            Add newsitem:<br>
-            <input type="text" id="nieuwsurlinput" name="FirstName" value=""><br>
-            
-            <p id="taglist"></p>
-            <button type="button" id="buttoninput" onclick="newNieuwsItem()">Add newsitem</button>
-            
-            <hr>
-            Tags: <br>
-            <input type="text" id="newTagInput" name="FirstName" value="">
-            <button type="button" id="buttonNewTag" onclick="newTag()">Add new tag</button><br>
-            <select id="taglistbox">
-                <option selected></option>
-            </select> 
-            <button type="button" id="buttonDeleteTag" onclick="deleteTag()">Remove Tag</button><br>
-            <hr>
-            Newsitems on site:<br>
-            
-            <p id="newsItemInDatabaseList"></p>
-            <button type="button" id="buttonDeleteAll" onclick="deleteAll()" disabled>Delete all newsitems</button>
-            
-                <input id='UnlockDeleteAll' type='checkbox' onclick="Unlock()">Unlock
-                
-            
-            
+        <!-- ADMIN TOOLS -->
+        <div id="rechterhelft">
+            <div id='toolAddNews'>
+                <h4>Add newsitem</h4><br>
+                <input type="text" id="nieuwsurlinput" name="FirstName" value=""><br>
+                <p id="taglist"></p>
+                <button type="button" id="buttoninput" onclick="newNieuwsItem()">Add newsitem</button>
+            </div>
+            <div id='toolTags'>
+                <h4>Tags</h4><br>
+                <input type="text" id="newTagInput" name="FirstName" value="">
+                <button type="button" id="buttonNewTag" onclick="newTag()">Add new tag</button><br>
+                <select id="taglistbox">
+                    <option selected></option>
+                </select> 
+                <button type="button" id="buttonDeleteTag" onclick="deleteTag()">Remove Tag</button><br>
+            </div>
+            <div id='toolCurrentNews'>
+                <h4>Newsitems on site</h4><br>
+                <p id="newsItemInDatabaseList"></p>
+                <button type="button" id="buttonDeleteAll" onclick="deleteAll()" disabled>Delete all newsitems</button>
+                <input id='UnlockDeleteAll' type='checkbox' onclick="Unlock()">Unlock 
+            </div>
         </div>
-	</body>
+        
+    </body>
+    
 </html>
