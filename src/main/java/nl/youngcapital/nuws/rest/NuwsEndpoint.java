@@ -63,7 +63,15 @@ public class NuwsEndpoint {
             }
             return "";
         }
-
+         
+        @ResponseBody
+        @GetMapping("/getnewsitemlist")
+        public List<NieuwsItem> getNewsitemList(){
+            List<NieuwsItem> NIList = nuwsservice.getAllFromDatabase();
+            return NIList;
+        }
+                
+         
         @ResponseBody
         @PostMapping("/updatenewsitemadd/{id}")
         public String addTagToNewsitem(@RequestBody String targettag, @PathVariable long id){
@@ -105,7 +113,6 @@ public class NuwsEndpoint {
 	@ResponseBody
 	@GetMapping("/nuwstitles")
 	public List<NieuwsItem> getNuwsTitles() throws IOException{
-		
 		List<NieuwsItem> NITList = nuwsservice.getAllFromDatabase();
 		for (NieuwsItem n : NITList) {
 			n.setTitle(new Scraper(n.getUrl()).scrapeTitle(new URL(n.getUrl())));
