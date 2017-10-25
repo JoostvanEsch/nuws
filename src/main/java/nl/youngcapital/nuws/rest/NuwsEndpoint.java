@@ -126,12 +126,28 @@ public class NuwsEndpoint {
 		return NITList;
 	}
 	
+
         @ResponseBody
         @DeleteMapping("/nuwsdelete")
         public String deleteNuws(){
                 nuwsservice.deleteAllDatabase();
                 return "";
         }
+
+	@ResponseBody
+	@GetMapping("/nuwstitlesbytag/{tag}")
+	public ArrayList<NieuwsItem> getNuwsTitlesByTag(@PathVariable String tag) throws IOException{
+		ArrayList<NieuwsItem> returnList = new ArrayList<NieuwsItem>();
+		List<NieuwsItem> NITList = nuwsservice.getAllFromDatabase();
+		for (NieuwsItem n : NITList) {
+			if (n.getTags().contains(tag)) {
+				n.setTitle(new Scraper(n.getUrl()).scrapeTitle(new URL(n.getUrl())));
+				returnList.add(n);
+			}
+		}
+		
+		return returnList;
+	}
         
     	@ResponseBody
     	@GetMapping("/getreviews/{id}")
@@ -189,6 +205,25 @@ public class NuwsEndpoint {
 		return TagList;
 	}
         
+
+    @ResponseBody
+    	@GetMapping("/tagsfromitem/{id}")
+    	public ArrayList<String> getTagsFromItem(@PathVariable long id){
+    		NieuwsItem k = nuwsservice.getFromDatabase(id);
+    		StringBuilder tags = new StringBuilder(k.getTags());
+    		ArrayList<String> tagList = new ArrayList<String>();
+    		while (true) {
+    			if (tags.length() != 0) {
+    				tagList.add(tags.substring(0, tags.indexOf(" ")));
+    				tags.delete(0, (tags.indexOf(" ")+1));
+    			} else {
+    				break;
+    			}
+    		}
+    		return tagList;
+    	}
+        
+
         @ResponseBody
 	@PostMapping("/nuwspost/{id}")
 	public String postEntiteit(@RequestBody NieuwsItem nieuwsitem, @PathVariable long id){
