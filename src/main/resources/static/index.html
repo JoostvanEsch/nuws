@@ -126,7 +126,7 @@
             	  var letters = '0123456789ABCDEF';
             	  var color = '#';
             	  for (var i = 0; i < 6; i++) {
-            	    color += letters[Math.floor(Math.random() * 6 + 6)];
+            	    color += letters[Math.floor(Math.random() * 16)];
             	  }
             	  return color;
             	}
@@ -140,7 +140,7 @@
                             currentNieuwsItem = this.responseText;
                             currentAdmin = nieuwsitem.admin.naam;
                                 var textaccumulation = "<h1>" + nieuwsitem.title + "</h1>";
-                                textaccumulation += "<h2>Added by <a style=\"color:#00e; text-decoration:underline;\" onclick=\"showPostsByAdmin("+nieuwsitem.admin.id+")\">"+ nieuwsitem.admin.naam + "</a><br>";
+                                textaccumulation += "<h2>Toegevoegd door <a style=\"color:#00e; text-decoration:underline;\" onclick=\"showPostsByAdmin("+nieuwsitem.admin.id+")\">"+ nieuwsitem.admin.naam + "</a><br>";
                                 textaccumulation += "<div id=\"taglist\"></div></h2>";
                                 textaccumulation += "<br><br>" + nieuwsitem.sub + "<br><br>" + nieuwsitem.bodytext;
                                 document.getElementById("loadnews").innerHTML += textaccumulation;
