@@ -213,8 +213,6 @@ public class NuwsEndpoint {
 	}
         
         
-        
-
     @ResponseBody
     	@GetMapping("/tagsfromitem/{id}")
     	public ArrayList<String> getTagsFromItem(@PathVariable long id){

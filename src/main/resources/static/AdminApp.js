@@ -201,6 +201,7 @@
             var idInt = data[i].id;
             deletebutton.id = idInt;
             var itemtagbox =  document.createElement("select");
+            itemtagbox.class = "itemlistlistbox";
             itemtagbox.id = "tagListboxOfItem"+data[i].id;
             itemtagbox.innerHTML = "<option selected></option>";
             var removetagbutton =  document.createElement("button");
