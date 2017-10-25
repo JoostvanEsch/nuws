@@ -108,6 +108,11 @@ public class NuwsService {
 		return (List<Tag>) tagrepository.findAll();
 	}
         
+        public Tag getOneTagFromDatabase(long id){
+            Tag t = tagrepository.findOne(id);
+            return t;
+        }
+        
          public List<Admin> getAdminsFromDatabase() {
                 
 		return (List<Admin>)adminrepository.findAll();

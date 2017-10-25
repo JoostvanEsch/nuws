@@ -33,7 +33,8 @@ public class NuwsEndpoint {
 	@Autowired
 	NuwsService nuwsservice;
 	
-	@PostMapping("/updatenewsitemremove/{id}")
+	@ResponseBody
+        @PostMapping("/updatenewsitemremove/{id}")
         public String removeTagFromNewsitem(@RequestBody String targettag, @PathVariable long id){
             NieuwsItem nieuwsitem = nuwsservice.getFromDatabase(id);
             String oldtag = nieuwsitem.getTags();
@@ -45,6 +46,25 @@ public class NuwsEndpoint {
             return "";
         }
         
+        @ResponseBody
+        @PostMapping("/deletetagfromallnewsitems")
+         public String deleteTagFromAllNewsitems(@RequestBody String targettag){
+             long id = Long.parseLong(targettag);
+             Tag tag =  nuwsservice.getOneTagFromDatabase(id);
+             String tagstring = tag.getTag();
+             List<NieuwsItem> itemlist = nuwsservice.getAllFromDatabase();
+             for (NieuwsItem i : itemlist){
+                String oldtag = i.getTags();
+                if (oldtag.contains(tagstring)){
+                    String newtag = oldtag.replace(tagstring+" ", "");
+                    i.setTags(newtag);
+                    nuwsservice.addToDatabase(i); 
+                }
+            }
+            return "";
+        }
+
+        @ResponseBody
         @PostMapping("/updatenewsitemadd/{id}")
         public String addTagToNewsitem(@RequestBody String targettag, @PathVariable long id){
             NieuwsItem nieuwsitem = nuwsservice.getFromDatabase(id);
@@ -106,6 +126,14 @@ public class NuwsEndpoint {
 		return NITList;
 	}
 	
+
+        @ResponseBody
+        @DeleteMapping("/nuwsdelete")
+        public String deleteNuws(){
+                nuwsservice.deleteAllDatabase();
+                return "";
+        }
+
 	@ResponseBody
 	@GetMapping("/nuwstitlesbytag/{tag}")
 	public ArrayList<NieuwsItem> getNuwsTitlesByTag(@PathVariable String tag) throws IOException{
@@ -120,12 +148,6 @@ public class NuwsEndpoint {
 		
 		return returnList;
 	}
-	
-        @GetMapping("/nuwsdelete")
-        public String deleteNuws(){
-                nuwsservice.deleteAllDatabase();
-                return "";
-        }
         
     	@ResponseBody
     	@GetMapping("/getreviews/{id}")
@@ -151,16 +173,18 @@ public class NuwsEndpoint {
         }
         
         
+        @ResponseBody
         @DeleteMapping("/deleteone/{id}")
         public String deleteOne(@PathVariable long id){
-		System.out.println("endpoint werkt"+id);
+		
                 nuwsservice.deleteOneFromDatabase(id);
                 return "";
         }
         
+        @ResponseBody
         @DeleteMapping("/deletetag/{id}")
         public String deleteTag(@PathVariable long id){
-		System.out.println("endpoint werkt"+id);
+		
                 nuwsservice.deleteTagFromDatabase(id);
                 return "";
         }
@@ -168,7 +192,7 @@ public class NuwsEndpoint {
         @ResponseBody
 	@GetMapping("/nunllinks")
         public List<String> getNUNLlinks()throws IOException {
-            System.out.println("getNUNLlinks EndPoint wordt geactiveerd");
+  
             LinkList.generateList();
             List<String> y = LinkList.getNunlList();
             return y;
@@ -181,6 +205,7 @@ public class NuwsEndpoint {
 		return TagList;
 	}
         
+
     @ResponseBody
     	@GetMapping("/tagsfromitem/{id}")
     	public ArrayList<String> getTagsFromItem(@PathVariable long id){
@@ -198,9 +223,11 @@ public class NuwsEndpoint {
     		return tagList;
     	}
         
+
+        @ResponseBody
 	@PostMapping("/nuwspost/{id}")
-	public String postEntiteit(@RequestBody NieuwsItem nieuwsitem, @PathVariable long id) throws IOException{
-                System.out.println("EndPoint wordt geactiveerd");
+	public String postEntiteit(@RequestBody NieuwsItem nieuwsitem, @PathVariable long id){
+             
                 Admin admin = nuwsservice.getOneAdminFromDatabase(id);
                 nieuwsitem.setAdmin(admin);
                 LocalDateTime ldt = LocalDateTime.now();
@@ -210,12 +237,14 @@ public class NuwsEndpoint {
                 return "";
 	}
         
-        
+        @ResponseBody
         @PostMapping("/newtag")
-	public void postNewTag(@RequestBody Tag tag) throws IOException{
+	public String postNewTag(@RequestBody Tag tag) throws IOException{
 		nuwsservice.addTagToDatabase(tag);
+                return "";
 	}
 	
+        @ResponseBody
         @PostMapping("/registeradmin")
 	public boolean postAdminRegistration(@RequestBody Admin admin){
 		List<Admin> adminList = nuwsservice.getAdminsFromDatabase();
