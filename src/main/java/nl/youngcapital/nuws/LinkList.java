@@ -36,7 +36,7 @@ public class LinkList {
         while ((line = br.readLine()) != null) {
         	if (line.contains(startText)) {startMarker++;}
         	if (line.contains(stopText)) {stopMarker++;}
-        	if (startMarker == 1 && stopMarker == 0 && line.contains("<a href") && line.contains(".html") && !(line.contains("/video")) && !(line.contains("/livestream")) && !(line.contains("/advertorial")) && !(line.contains("/nushop"))) {
+        	if (startMarker == 1 && stopMarker == 0 && line.contains("<a href") && line.contains(".html") && !(line.contains("/video")) && !(line.contains("/livestream")) && !(line.contains("/liveticker")) && !(line.contains("/advertorial")) && !(line.contains("/nushop")) && !(line.contains("/podcast"))) {
         		relevantCode.add("https://www.nu.nl" + line.substring(line.indexOf("/"), (line.indexOf(".html")+5)));
                         
              

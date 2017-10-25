@@ -12,9 +12,13 @@
 			var isLoggedIn = false;
 			var adminList;
 			
-            function startrefresh(){
+			function setup() {
                 loadTags();
                 loadAdmins();
+                startrefresh();
+			}
+			
+            function startrefresh(){
                 var xhttp = new XMLHttpRequest();
                     xhttp.onreadystatechange = function() {
                         if (this.readyState == 4 && this.status == 200) {
@@ -412,7 +416,7 @@
 		margin-bottom:10px;
 		padding:8px;
 		background-color: #009;
-		border-radius:10px;
+		border-radius:22px;
 		font-family:"Arial";
 		color:#fff;
 		vertical-align:center;
@@ -443,7 +447,7 @@
 	
 	</style>
     </head>
-    <body onload="startrefresh()">
+    <body onload="setup()">
         
 
         <div id="loginPane">
