@@ -12,7 +12,7 @@
             currentOption = targetTag[i];
             if (currentOption.selected == true){
                tagstring = currentOption.innerHTML;
-               greenlight = true
+               greenlight = true;
             }
         }
         if (greenlight){
@@ -20,7 +20,11 @@
 
         }    
     }
-
+    
+    function checkNewsItemList(){
+        sendXMLHttpRequest("GET", "getnewsitemlist", newNieuwsItem, null);
+    }
+    
     function convertTagListToString(){
         var tagstring = "";
         for (i = 1; i <= tagCount; i++){
@@ -34,11 +38,11 @@
     }
 
     function deleteAll(){
-        sendXMLHttpRequest("DELETE", "nuwsdelete", getNewsItemList, null)
+        sendXMLHttpRequest("DELETE", "nuwsdelete", getNewsItemList, null);
     }
 
     function deleteOne(id){
-        sendXMLHttpRequest("DELETE", "deleteone/"+id, getNewsItemList, null)
+        sendXMLHttpRequest("DELETE", "deleteone/"+id, getNewsItemList, null);
     }
 
     function deleteTag(){
@@ -61,15 +65,15 @@
     }
 
     function getNUNLlinks(){
-        sendXMLHttpRequest("GET", "nunllinks", processNunlLinksRequest, null)
+        sendXMLHttpRequest("GET", "nunllinks", processNunlLinksRequest, null);
     }
 
     function getTags(){
-        sendXMLHttpRequest("GET", "nuwstags", processGetTagRequest, null)    
+        sendXMLHttpRequest("GET", "nuwstags", processGetTagRequest, null);    
     }
 
     function getTagsForItemList(){
-        sendXMLHttpRequest("GET", "nuwstags", processTagsForItemList, null)
+        sendXMLHttpRequest("GET", "nuwstags", processTagsForItemList, null);
     }
 
     function hideMainContent(){
@@ -82,7 +86,7 @@
     }
 
     function login(){
-        sendXMLHttpRequest("GET", "adminlogin", processLogin, null)
+        sendXMLHttpRequest("GET", "adminlogin", processLogin, null);
     }
 
     function logout(){
@@ -96,13 +100,24 @@
         document.getElementById("usernameTextbox").value = "";
         document.getElementById("passwordTextbox").value = "";  
     }
-
-    function newNieuwsItem(){
+    
+    function newNieuwsItem(data){
         var newUrl= document.getElementById("nieuwsurlinput").value;
         var newTags = convertTagListToString();
         var id = currentAdmin;
-        var nieuwsitem = '{"tags":"'+newTags+'" ,"url":"'+newUrl+'"}'; 
-        sendXMLHttpRequest("POST", "nuwspost/"+id, getNewsItemList, nieuwsitem);
+        var nieuwsitem = '{"tags":"'+newTags+'" ,"url":"'+newUrl+'"}';
+        var greenlight = true
+        for (i = 0; i < data.length; i++){
+            if (data[i].url == newUrl){
+                greenlight = false
+            }
+        }
+        if (greenlight){
+           sendXMLHttpRequest("POST", "nuwspost/"+id, getNewsItemList, nieuwsitem); 
+        }
+        else{
+            alert("This newsitem is already in the database");
+        } 
     }
 
     function newTag(){
@@ -119,7 +134,7 @@
         for (i = 0; i < data.length; i++) {
             tagCount++;
             var j = parseInt(i);
-            var textaccumulation = "<label class=container><input id='tag"+tagCount+"' name='"+data[j].tag+"' type='checkbox'>"+data[j].tag+"<span class='checkmark'></span></label><br>";
+            var textaccumulation = "<label class=container><input id='tag"+tagCount+"' name='"+data[j].tag+"' type='checkbox'> "+data[j].tag+"<span class='checkmark'></span></label><br>";
             document.getElementById("taglist").innerHTML += textaccumulation;
             var tagListbox =  document.createElement("option");
             tagListbox.value=data[j].id;
@@ -203,7 +218,8 @@
             document.getElementById("newsItemInDatabaseList").appendChild(itemtagbox);
             document.getElementById("newsItemInDatabaseList").appendChild(addtagbutton);
             document.getElementById("newsItemInDatabaseList").appendChild(removetagbutton);
-            newsitemlist.push(data[i].id)
+            document.getElementById("newsItemInDatabaseList").innerHTML += "<br><br>";
+            newsitemlist.push(data[i].id);
         }     
         getTagsForItemList();
     }
@@ -214,7 +230,7 @@
             var indexA = lijst.indexOf("https");
             var indexB = lijst.indexOf("\" target=");
             var lijstUitgekleed = lijst.substring(indexA, indexB); 
-            var lijstfinal = lijst + " -> <button id='button' type='button' onclick='kopieerURL(\""+ lijstUitgekleed + "\")'>copy URL</button><br>";
+            var lijstfinal = "<button id='button' type='button' onclick='kopieerURL(\""+ lijstUitgekleed + "\")'>copy URL</button>" + lijst + "<br>";
             document.getElementById("artikellijst").innerHTML += lijstfinal;
         }
     } 
@@ -239,7 +255,7 @@
             adminType = 1;
         }
         var admin = '{"naam":"'+newUsername+'" ,"password":"'+newPassword+'" ,"admintype":"'+adminType+'"}';
-        sendXMLHttpRequest("POST", "registeradmin", processNewAdminRequest, admin)
+        sendXMLHttpRequest("POST", "registeradmin", processNewAdminRequest, admin);
     }    
 
     function removeTagFromNewsitem(id){
@@ -250,7 +266,7 @@
             currentOption = targetTag[i];
             if (currentOption.selected == true){
                tagstring = currentOption.innerHTML;
-               greenlight = true
+               greenlight = true;
             }
         }
         if (greenlight){
@@ -262,27 +278,25 @@
         getNUNLlinks(); 
         getTags(); 
         getNewsItemList(); 
-        hideMainContent()
+        hideMainContent();
     }
 
     function Unlock(){
         if (locked){
             document.getElementById("buttonDeleteAll").disabled = false;
-            locked = false
+            locked = false;
         }
         else{
             document.getElementById("buttonDeleteAll").disabled = true;
-            locked = true
+            locked = true;
         }
     }
 
     // GENERIC METHOD FOR SENDING REQUESTS TO SERVER
-    function sendXMLHttpRequest(path ,endpoint, callbackFunction, requestitem){
-        console.log("HTTP Request")
+    function sendXMLHttpRequest(path ,endpoint, callbackFunction, requestitem){     
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-                console.log("HTTP Response")
                 if (path == "GET"){
                     var response = JSON.parse(this.responseText);
                     callbackFunction(response);
