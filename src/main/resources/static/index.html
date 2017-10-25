@@ -12,7 +12,8 @@
 			var isLoggedIn = false;
 			
             function startrefresh(){
-            	
+                loadTags();
+                loadAdmins();
                 var xhttp = new XMLHttpRequest();
                     xhttp.onreadystatechange = function() {
                         if (this.readyState == 4 && this.status == 200) {
@@ -29,6 +30,42 @@
                         }
                     };
                 xhttp.open("GET", (domain + "/nuwstitles"));
+                xhttp.setRequestHeader("Content-type", "application/json");
+                xhttp.send();
+            }
+            
+			function loadTags(){
+                var xhttp = new XMLHttpRequest();
+                    xhttp.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                        document.getElementById("tagspane").innerHTML = "";
+                            var data = JSON.parse(this.responseText);
+                            var textaccumulation = "";
+                            for (i = 0; i < data.length; i++) {
+                                textaccumulation += "<a onclick='showPostsByTag(\""+data[i].tag+"\")'><div class=\"tag\">" + data[i].tag  + "</div></a>";
+                            }
+                            document.getElementById("tagspane").innerHTML = "";
+                            document.getElementById("tagspane").innerHTML += textaccumulation;
+                        }
+                    };
+                xhttp.open("GET", (domain + "/nuwstags"));
+                xhttp.setRequestHeader("Content-type", "application/json");
+                xhttp.send();
+            }
+			
+			function loadAdmins(){
+                var xhttp = new XMLHttpRequest();
+                    xhttp.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                            var data = JSON.parse(this.responseText);
+                            var textaccumulation = "";
+                            for (i = 0; i < data.length; i++) {
+                                textaccumulation += "<a onclick='showPostsByAdmin("+data[i].id+")'><div class=\"tag\">" + data[i].naam  + "</div></a>";
+                            }
+                            document.getElementById("tagspane").innerHTML += textaccumulation;
+                        }
+                    };
+                xhttp.open("GET", (domain + "/adminlogin"));
                 xhttp.setRequestHeader("Content-type", "application/json");
                 xhttp.send();
             }
@@ -300,7 +337,7 @@
 		z-index:2;
 		overflow:hidden;
 	}
-		.filter {
+	.filter {
 		width:100%;
 		height:60px;
 		margin-left:35px;
@@ -344,6 +381,36 @@
 	display:none;
 	text-align:center;
 	}
+	#tagspane{
+		width:100%;
+		height:auto;
+		margin-left:35px;
+		margin-top:35px;
+		padding:7px;
+		border-radius:5px;
+		font-family:"Arial";
+		text-align:right;
+		float:right;
+		color:#fff;
+		align:center;
+		z-index:2;
+		overflow:hidden;
+	}
+	.tag{
+		height:18px;
+		margin-left:20px;
+		margin-top:5px;
+		padding:8px;
+		background-color: #009;
+		border-radius:10px;
+		font-family:"Arial";
+		color:#fff;
+		vertical-align:center;
+		float:right;
+		z-index:2;
+		overflow:hidden;
+	
+	}
 	#reviewpane{
 	display:none;
 	padding-top:35px;
@@ -371,8 +438,10 @@
         </div>
         <div id="welcomePane">
         </div>
-        
-        <div class="thumbpane" id="thumbpane"></div>
+        <div class="thumbpane">
+        <div id="tagspane"></div>
+        <div id="thumbpane"></div>
+        </div>
         <div class="textpane" >
         <div id="loadnews">
         <br><br><br>Welkom op de site van Joost en Reindert.<br><br>
