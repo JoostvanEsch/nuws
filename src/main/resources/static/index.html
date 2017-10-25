@@ -10,6 +10,7 @@
 			var currentTagList;
 			var newsLoaded = false;
 			var isLoggedIn = false;
+			var adminList;
 			
             function startrefresh(){
                 loadTags();
@@ -58,9 +59,11 @@
                     xhttp.onreadystatechange = function() {
                         if (this.readyState == 4 && this.status == 200) {
                             var data = JSON.parse(this.responseText);
+                            console.log(data);
+                            adminList = data;
                             var textaccumulation = "";
                             for (i = 0; i < data.length; i++) {
-                                textaccumulation += "<a onclick='showPostsByAdmin("+data[i].id+")'><div class=\"tag\">" + data[i].naam  + "</div></a>";
+                                textaccumulation += "<a onclick='showPostsByAdmin("+data[i].id+")'><div class=\"tag admin\">" + data[i].naam  + "</div></a>";
                             }
                             document.getElementById("tagspane").innerHTML += textaccumulation;
                         }
@@ -69,8 +72,15 @@
                 xhttp.setRequestHeader("Content-type", "application/json");
                 xhttp.send();
             }
+			
+			function setCurrentAdmin(id) {
+				  for (i = 0; i < adminList.length; i++) {
+				    if (adminList[i].id == id) currentAdmin = adminList[i];
+				  }
+				}
             
             function showPostsByAdmin(id){
+            		setCurrentAdmin(id);
                 var xhttp = new XMLHttpRequest();
                     xhttp.onreadystatechange = function() {
                         if (this.readyState == 4 && this.status == 200) {
@@ -82,7 +92,7 @@
                             	   var color = getRandomColor();
                                 textaccumulation += "<a onclick='loadItem("+j+")'><div class=\"thumb\" style=\"background-color:"+color+";\">" + data[i].title  + "</div></a>";
                             }
-                            document.getElementById("thumbpane").innerHTML = "<div class=\"filter\">Showing posts by "+currentAdmin+"<br><br><a onclick=\"startrefresh()\">Remove filter</a></div>";
+                            document.getElementById("thumbpane").innerHTML = "<div class=\"filter\">Showing posts by "+currentAdmin.naam+"<br><br><a onclick=\"startrefresh()\">Remove filter</a></div>";
                             document.getElementById("thumbpane").innerHTML += textaccumulation;
                         }
                     };
@@ -116,7 +126,7 @@
             	  var letters = '0123456789ABCDEF';
             	  var color = '#';
             	  for (var i = 0; i < 6; i++) {
-            	    color += letters[Math.floor(Math.random() * 16)];
+            	    color += letters[Math.floor(Math.random() * 6 + 6)];
             	  }
             	  return color;
             	}
@@ -409,7 +419,15 @@
 		float:right;
 		z-index:2;
 		overflow:hidden;
-	
+	}
+	.tag.admin{
+	height:18px;
+	padding:6px;
+	color:#009;
+	background-color: #fff;
+	border-style:solid;
+	border-width:2px;
+	border-color:#009;
 	}
 	#reviewpane{
 	display:none;
