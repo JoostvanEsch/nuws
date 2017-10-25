@@ -212,6 +212,8 @@ public class NuwsEndpoint {
 		return TagList;
 	}
         
+        
+        
 
     @ResponseBody
     	@GetMapping("/tagsfromitem/{id}")
