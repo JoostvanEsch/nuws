@@ -44,7 +44,6 @@ public class Scraper {
         String startString = "title-container";
         ArrayList<String> titleAr = new ArrayList<String>();
         
-       //System.out.println("printen start");
         
         while ((line = br.readLine()) != null) {
         	if (line.toLowerCase().contains(startString.toLowerCase())) {
@@ -52,7 +51,6 @@ public class Scraper {
         	}
         	if (start == 1) {
         		titleAr.add(line);
-                        //System.out.println(line);
             if (line.toLowerCase().contains("</div>")) {
             		closeDivCount++;
             }
@@ -61,9 +59,6 @@ public class Scraper {
             }
         	}
         }
-        
-        
-        //System.out.println("printen eind");
        
         if (titleAr.size() > 0 ){
             return titleAr.get(3).trim();
