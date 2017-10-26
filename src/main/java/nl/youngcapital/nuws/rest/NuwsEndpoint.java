@@ -3,28 +3,27 @@ package nl.youngcapital.nuws.rest;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import nl.youngcapital.nuws.Admin;
 import nl.youngcapital.nuws.Gebruiker;
+import nl.youngcapital.nuws.LinkList;
 import nl.youngcapital.nuws.NieuwsItem;
+import nl.youngcapital.nuws.Review;
 import nl.youngcapital.nuws.Scraper;
 import nl.youngcapital.nuws.Tag;
-import nl.youngcapital.nuws.Admin;
 import nl.youngcapital.nuws.service.NuwsService;
-import nl.youngcapital.nuws.LinkList;
-import nl.youngcapital.nuws.Review;
 
 
 @RestController
@@ -274,12 +273,22 @@ public class NuwsEndpoint {
 	public String postRegistration(@RequestBody Gebruiker gebruiker){
 		ArrayList<Gebruiker> userList = new ArrayList<Gebruiker>();
 		boolean userNameTaken = false;
+		boolean userNameValid = true;
 		
 		userList = nuwsservice.getUsersFromDatabase();
+		
+		for (int i = 0; i < gebruiker.getNaam().length(); i++) {
+			if (!Character.isLetterOrDigit(gebruiker.getNaam().charAt(i))) {
+				userNameValid = false;
+			}
+			
+			
+			
+		}
 		for (Gebruiker g : userList) {
                     if (g.getNaam().equalsIgnoreCase(gebruiker.getNaam())) userNameTaken = true;
 		}
-		if (userNameTaken == false) {
+		if (userNameTaken == false && userNameValid == true) {
                     return new String("true");
 		} 
                 else {
