@@ -274,6 +274,7 @@ public class NuwsEndpoint {
 		ArrayList<Gebruiker> userList = new ArrayList<Gebruiker>();
 		boolean userNameTaken = false;
 		boolean userNameValid = true;
+		boolean passwordValid = true;
 		
 		userList = nuwsservice.getUsersFromDatabase();
 		
@@ -281,14 +282,16 @@ public class NuwsEndpoint {
 			if (!Character.isLetterOrDigit(gebruiker.getNaam().charAt(i))) {
 				userNameValid = false;
 			}
-			
-			
-			
+		}
+		for (int j = 0; j < gebruiker.getPassword().length(); j++) {
+			if (!Character.isLetterOrDigit(gebruiker.getPassword().charAt(j))) {
+				passwordValid = false;
+			}
 		}
 		for (Gebruiker g : userList) {
                     if (g.getNaam().equalsIgnoreCase(gebruiker.getNaam())) userNameTaken = true;
 		}
-		if (userNameTaken == false && userNameValid == true) {
+		if (userNameTaken == false && userNameValid == true && passwordValid == true) {
                     return new String("true");
 		} 
                 else {

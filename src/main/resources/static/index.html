@@ -241,7 +241,7 @@
                     login(gebruiker);
                     }
             		} else {
-            			alert("Kies een andere gebruikersnaam.\nDeze gebruikersnaam is al geregistreerd, of de gebruikersnaam bevat niet-toegestane tekens. \n\nEen gebruikersnaam mag alleen alfa-numerieke tekens bevatten.");
+            			alert("Kies een andere gebruikersnaam.\nDeze gebruikersnaam is al geregistreerd, of de gebruikersnaam/wachtwoord bevat niet-toegestane tekens. \n\nEen gebruikersnaam of wachtwoord mag alleen alfa-numerieke tekens bevatten.");
             		}
             }
             
@@ -459,7 +459,7 @@
 
         <div id="loginPane">
   			Username: <input type="text" id="username" maxlength="20">
-  			Password: <input type="text" id="password" maxlength="20">
+  			Password: <input type="password" id="password" maxlength="20">
  			<input type="submit" value="Log-in" onclick="login()">
  			<input type="submit" value="Register" onclick="register()">
  			<a href=/AdminApp.html>Naar de adminpagina --></a>
