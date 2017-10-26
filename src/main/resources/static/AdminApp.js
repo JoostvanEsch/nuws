@@ -17,8 +17,22 @@
         }
         if (greenlight){
             sendXMLHttpRequest("POST","updatenewsitemadd/"+id, getNewsItemList, tagstring);
-
         }    
+    }
+    
+    function changeRegisterNameBox(){
+        if (document.getElementById("registerUsernameTextbox").value == "new username"){
+            document.getElementById("registerUsernameTextbox").value = "";
+            document.getElementById("registerUsernameTextbox").style.color = "black"
+        }
+    }
+    
+    function changeRegisterPasswordBox(){
+        if (document.getElementById("registerPasswordTextbox").value == "new password"){
+            document.getElementById("registerPasswordTextbox").value = "";
+            document.getElementById("registerPasswordTextbox").style.color = "black";
+            document.getElementById("registerPasswordTextbox").type="password";
+        }
     }
     
     function checkNewsItemList(){
@@ -179,7 +193,7 @@
 
     function processNewAdminRequest(data){
         document.getElementById("registerUsernameTextbox").value = "";
-        document.getElementById("registerPsswordTextbox").value = "";
+        document.getElementById("registerPasswordTextbox").value = "";
         if(data){
             alert("Registration failed! Username allready exists.");
         }
@@ -212,6 +226,8 @@
             addtagbutton.innerHTML = "Add tag";
             addtagbutton.id = data[i].id;
             addtagbutton.addEventListener("click", function(){addTagToNewsitem(this.id);});
+            var legeregel = document.createElement("p");
+            legeregel.innerHTML = "<br>";
             document.getElementById("newsItemInDatabaseList").appendChild(titelvak);                                  
             document.getElementById("newsItemInDatabaseList").appendChild(adminvak);
             document.getElementById("newsItemInDatabaseList").appendChild(tagvak);
@@ -219,7 +235,7 @@
             document.getElementById("newsItemInDatabaseList").appendChild(itemtagbox);
             document.getElementById("newsItemInDatabaseList").appendChild(addtagbutton);
             document.getElementById("newsItemInDatabaseList").appendChild(removetagbutton);
-            document.getElementById("newsItemInDatabaseList").innerHTML += "<br><br>";
+            document.getElementById("newsItemInDatabaseList").appendChild(legeregel);
             newsitemlist.push(data[i].id);
         }     
         getTagsForItemList();
@@ -231,7 +247,7 @@
             var indexA = lijst.indexOf("https");
             var indexB = lijst.indexOf("\" target=");
             var lijstUitgekleed = lijst.substring(indexA, indexB); 
-            var lijstfinal = "<button id='button' type='button' onclick='kopieerURL(\""+ lijstUitgekleed + "\")'>copy URL</button>" + lijst + "<br>";
+            var lijstfinal = "<button id='button' type='button' onclick='kopieerURL(\""+ lijstUitgekleed + "\")'>copy URL</button> " + lijst + "<br>";
             document.getElementById("artikellijst").innerHTML += lijstfinal;
         }
     } 
@@ -249,7 +265,7 @@
 
     function registerNewAdmin(){
         var newUsername = document.getElementById("registerUsernameTextbox").value;
-        var newPassword = document.getElementById("registerPsswordTextbox").value;
+        var newPassword = document.getElementById("registerPasswordTextbox").value;
         var listboxcontent = document.getElementById("adminlistbox");
         var adminType = 2;
         if (listboxcontent[2].selected == true){
