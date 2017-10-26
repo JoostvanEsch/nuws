@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html>
     <head>
+     <meta charset="utf-8" />
 	<script>	
 			
-			var domain = "http://188.166.3.211:8082";
+			var domain = "http://localhost:8082";
 			var currentUser = {id:"100",naam:"test",password:"testww"}
 			var currentNieuwsItem;
 			var currentAdmin;
@@ -96,7 +97,7 @@
                             	   var color = getRandomColor();
                                 textaccumulation += "<a onclick='loadItem("+j+")'><div class=\"thumb\" style=\"background-color:"+color+";\">" + data[i].title  + "</div></a>";
                             }
-                            document.getElementById("thumbpane").innerHTML = "<div class=\"filter\">Showing posts by "+currentAdmin.naam+"<br><br><a onclick=\"startrefresh()\">Remove filter</a></div>";
+                            document.getElementById("thumbpane").innerHTML = "<div class=\"filter\">Showing posts by "+currentAdmin.naam+"<br><br><a onclick=\"startrefresh()\"><u>Remove filter</u></a></div>";
                             document.getElementById("thumbpane").innerHTML += textaccumulation;
                         }
                     };
@@ -117,7 +118,7 @@
                             	   var color = getRandomColor();
                                 textaccumulation += "<a onclick='loadItem("+j+")'><div class=\"thumb\" style=\"background-color:"+color+";\">" + data[i].title  + "</div></a>";
                             }
-                            document.getElementById("thumbpane").innerHTML = "<div class=\"filter\">Showing posts related to "+tag+"<br><br><a onclick=\"startrefresh()\">Remove filter</a></div>";
+                            document.getElementById("thumbpane").innerHTML = "<div class=\"filter\">Showing posts related to "+tag+"<br><br><a onclick=\"startrefresh()\"><u>Remove filter</u></a></div>";
                             document.getElementById("thumbpane").innerHTML += textaccumulation;
                         }
                     };
@@ -129,9 +130,15 @@
             function getRandomColor() {
             	  var letters = '0123456789ABCDEF';
             	  var color = '#';
-            	  for (var i = 0; i < 6; i++) {
-            	    color += letters[Math.floor(Math.random() * 16)];
+            	  for (var i = 0; i < 2; i++) {
+            		  color += letters[Math.floor(Math.random() * 0)];
             	  }
+            	  for (var i = 0; i < 2; i++) {
+            		color += letters[Math.floor(Math.random() * 12)];
+              }
+            	  for (var i = 0; i < 2; i++) {
+            		  color += letters[Math.floor(Math.random() * 4)];
+              }
             	  return color;
             	}
             

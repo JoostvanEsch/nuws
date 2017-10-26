@@ -307,7 +307,7 @@
                 } 
             };
         }    
-        xhttp.open(path, "http://188.166.3.211:8082/"+endpoint, true);
+        xhttp.open(path, "http://localhost:8082/"+endpoint, true);
         xhttp.setRequestHeader("Content-type", "application/json");
         xhttp.send(requestitem);
     }
