@@ -183,7 +183,6 @@ public class NuwsEndpoint {
         @ResponseBody
         @DeleteMapping("/deleteone/{id}")
         public String deleteOne(@PathVariable long id){
-		
                 nuwsservice.deleteOneFromDatabase(id);
                 return "";
         }
