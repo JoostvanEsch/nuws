@@ -2,243 +2,31 @@
 <!DOCTYPE html>
 <html>
     
-    <head>
-        
+    <head> 
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-        
+        <link rel="stylesheet" type="text/css" href="AdminApp.css"> 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-        
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
-        
         <script src ="AdminApp.js"></script>
-        
-        <style>
-            
-            /* A ELEMENTS */
-            
-            #linktousersite{
-                visibility: hidden;
-                color: #EEEEEE;
-                margin-left: 2px;
-                margin-right: 2px;
-                margin-top: 4px;
-                margin-bottom: 2px;
-                float: left; 
-            }
-            
-            /* BODY ELEMENT */
-            body{
-                background-image: url("nuwsbackground.png");
-                background-attachment: fixed;
-            }
-            
-            /* BUTTON ELEMENTS */
-            
-            button {
-                -webkit-border-radius: 5;
-                -moz-border-radius: 5;
-                border-radius: 0px;
-                font-family: Arial;
-                color: #000000;
-                font-size: 14px;
-                background: #71bced;
-                padding: 2px 4px 2px 4px;
-                border: solid #1f628d 1px;
-                text-decoration: none;
-                margin: 1px;
-            }
-            
-            button:hover {
-                background: #309ee3;
-                text-decoration: none;
-            }
-            
-            button:disabled{
-                 background: #DDDDDD;
-                 border: solid #BBBBBB 1px;
-                 color: #BBBBBB;
-            }
-            
-            #logoutbutton{
-                float: left; 
-                visibility: hidden;
-                margin: 2px;
-            }
-            
-            /* DIV ELEMENTS */
-            
-            div {
-                border: 1px;
-                border-color: blue;
-                padding: 2px;
-            }
-            
-            div.nieuwstitel{
-               padding-left: 2px;
-               padding-right: 2px; 
-               padding-top: 10px; 
-               padding-bottom: 2px; 
-            }
-                    
-            #preloginfield{
-                float: left;
-                color: #EEEEEE;
-            }
-            
-            #loggedinAdmin{
-                float: left; 
-                visibility: hidden;
-                color: #EEEEEE;
-                margin: 2px;
-            }
-            
-            #adminregisterfield{
-                float:  right; 
-                visibility: hidden;
-            }
-            
-            #linkerhelft{
-                padding-top: 4px;
-                padding-bottom: 4px;
-                padding-left: 4px;
-                padding-right: 2px;
-                float:  left; 
-                width:  50%; 
-                height: 1000px;
-            } 
-            
-            #rechterhelft{
-                padding: 4px;
-                fpadding-top: 4px;
-                padding-bottom: 4px;
-                padding-left: 2px;
-                padding-right: 4px; 
-                float: right;
-                width:  50%; 
-                height: 1000px;
-            }
-            
-            #toolAddNews{
-                padding-top: 4px;
-                padding-bottom: 8px;
-                padding-left: 8px;
-                padding-right: 8px;
-                background-color: #EEEEEE;
-            }
-            
-            #toolCurrentNews{
-                padding-top: 4px;
-                padding-bottom: 8px;
-                padding-left: 8px;
-                padding-right: 8px;
-                background-color: #EEEEEE;
-            }
-            
-            #toolTags{
-                padding-top: 4px;
-                padding-bottom: 8px;
-                padding-left: 8px;
-                padding-right: 8px;
-                margin-bottom: 4px;
-                margin-top: 4px;
-                background-color: #EEEEEE;
-            }
-            
-             #linkfield{
-                padding-top: 4px;
-                padding-bottom: 8px;
-                padding-left: 8px;
-                padding-right: 8px;
-                height: 30%;
-                overflow-y: scroll; 
-                background-color: #EEEEEE;
-             }
-             
-             #iframefield{
-                padding: 4px;
-                background-color: #EEEEEE; 
-             }
-             
-             #linklistheader{
-                padding-left: 8px;
-                padding-right: 8px;
-                   
-                background-color: #EEEEEE; 
-             }
-             
-             #previewheader{
-                margin-top: 4px; 
-                padding-top: 4px;
-                padding-bottom: 8px;
-                padding-left: 8px;
-                padding-right: 8px;
-                background-color: #EEEEEE; 
-             
-             }
-             
-             
-            
-             /* H4 ELEMENTS*/
-             
-             h4{
-                 color: darkblue;
-                 font-family: serif;
-             }
-             
-             /* IFRAME ELEMENTS */
-            iframe {
-                position: default;
-                border: 2px;
-                border-color: blue;
-                height: 100%;
-                width: 100%; 
-                overflow-y: scroll;
-            }
-            
-            /* INPUT ELEMENTS */
-            
-            input{
-                color: black;
-            }
-           
-            #tag{
-                margin-right: 2px;
-            }
-            
-            #iframefield{
-                padding-top: 4px;
-                padding-bottom: 8px;
-                padding-left: 8px;
-                padding-right: 8px;
-                height: 70%;
-            }
-            
-            #registerUsernameTextbox{
-                color: #BBBBBB;
-            }
-            
-            #registerPasswordTextbox{
-                color: #BBBBBB;
-            }
-            
-            #nieuwsurlinput{
-                width: 100%;
-                margin-bottom: 4px
-            }
-            
-            /* SELECT ELEMENTS */
-            
-            select{
-                margin-left: 2px;
-                margin-right: 2px;
-                    
-            }
-
-        </style>
-        
+        <script>
+            $(document).ready(function(){
+                startMethods();
+                $("#registerUsernameTextbox").click(function(){changeRegisterNameBox();});
+                $("#registerPasswordTextbox").click(function(){changeRegisterPasswordBox();});
+                $("#loginbutton").click(function(){login();});
+                $("#logoutbutton").click(function(){logout();});
+                $("#registerbutton").click(function(){registerNewAdmin();});
+                $("#buttoninput").click(function(){checkNewsItemList();});
+                $("#buttonNewTag").click(function(){newTag();});
+                $("#buttonDeleteTag").click(function(){deleteTag();});
+                $("#buttonDeleteAll").click(function(){deleteAll();});
+                $("#UnlockDeleteAll").click(function(){Unlock();});
+            });    
+        </script>
+       
     </head>
    
-    <body onload="startMethods()">
+    <body>
         
         <!-- LOGIN BALK BOVEN IN SCHERM -->
         <div id='preloginfield'>
@@ -246,21 +34,21 @@
             <input type="text" id="usernameTextbox" name="Name" value="">
             Password:
             <input type="password" id="passwordTextbox" name="Password" value="">
-            <button type="button" id="loginbutton" onclick="login()">Login</button><br>
+            <button type="button" id="loginbutton">Login</button><br>
         </div>
         <div id='loggedinAdmin'>
         </div>
-        <button type="button" id="logoutbutton" onclick='logout()'>Logout</button>
+        <button type="button" id="logoutbutton">Logout</button>
         <a href="index.html" target="_blank" id="linktousersite"><i>Visit User Site --></i></a>
         <div id='adminregisterfield'>
-            <input type="text" id="registerUsernameTextbox" value="new username" onclick="changeRegisterNameBox()">
-            <input type="text" id="registerPasswordTextbox" value="new password" onclick="changeRegisterPasswordBox()">
+            <input type="text" id="registerUsernameTextbox" value="new username">
+            <input type="text" id="registerPasswordTextbox" value="new password">
             <select id="adminlistbox">
                 <option selected></option>
                 <option value='Admin'>Admin</option>
                 <option value='Superadmin'>Superadmin</option>
             </select>
-            <button type="button" id="registerbutton" onclick='registerNewAdmin()'>Register new admin</button>         
+            <button type="button" id="registerbutton">Register new admin</button>         
         </div>
         
         <!-- NU.NL LINK-LIJST EN PREVIEWSCHERM -->
@@ -285,22 +73,22 @@
                 <h4>Add newsitem</h4>
                 <input type="text" id="nieuwsurlinput" name="FirstName" value=""><br>
                 <p id="taglist"></p>
-                <button type="button" id="buttoninput" onclick="checkNewsItemList()">Add newsitem</button>
+                <button type="button" id="buttoninput">Add newsitem</button>
             </div>
             <div id='toolTags'>
                 <h4>Tags</h4>
                 <input type="text" id="newTagInput" name="FirstName" value="">
-                <button type="button" id="buttonNewTag" onclick="newTag()">Add new tag</button><br>
+                <button type="button" id="buttonNewTag">Add new tag</button><br>
                 <select id="taglistbox">
                     <option selected></option>
                 </select> 
-                <button type="button" id="buttonDeleteTag" onclick="deleteTag()">Remove Tag</button><br>
+                <button type="button" id="buttonDeleteTag">Remove Tag</button><br>
             </div>
             <div id='toolCurrentNews'>
                 <h4>Newsitems on site</h4>
                 <p id="newsItemInDatabaseList"></p>
-                <button type="button" id="buttonDeleteAll" onclick="deleteAll()" disabled>Delete all newsitems</button>
-                <input id='UnlockDeleteAll' type='checkbox' onclick="Unlock()"> Unlock 
+                <button type="button" id="buttonDeleteAll" disabled>Delete all newsitems</button>
+                <input id='UnlockDeleteAll' type='checkbox'> Unlock 
             </div>
         </div>
         
