@@ -37,7 +37,7 @@ public class Scraper {
     public String scrapeTitle(URL url) throws IOException{
         URLConnection con = url.openConnection();
         InputStream is =con.getInputStream();
-        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+        BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
         String line = "";
         int start = 0;
         int closeDivCount = 0;
@@ -72,7 +72,7 @@ public class Scraper {
     public String scrapeSubTitle(URL url) throws IOException{
         URLConnection con = url.openConnection();
         InputStream is =con.getInputStream();
-        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+        BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
         String line = "";
         int start = 0;
         int closeDivCount = 0;
@@ -102,7 +102,7 @@ public class Scraper {
     public String scrapeBody(URL url) throws IOException{
         URLConnection con = url.openConnection();
         InputStream is =con.getInputStream();
-        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+        BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
         String line = "";
         int start = 0;
         String startString = "block.article.body";

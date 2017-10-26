@@ -21,7 +21,7 @@ public class LinkList {
 
         URLConnection con = url.openConnection();
         InputStream is =con.getInputStream();
-        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+        BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
 
         String line = null;
         	ArrayList<String> relevantCode = new ArrayList<String>();
